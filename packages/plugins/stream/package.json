@@ -1,0 +1,12 @@
+{
+    "name": "@emisor/plugin-stream",
+    "version": "1.0.0",
+    "description": "Advanced event emitter",
+    "main": "index.js",
+    "author": "Victor Perez <vpjs@victor-perez.nl>",
+    "private": false,
+    "module": "index.js",
+    "dependencies": {
+        "@emisor/core": "*"
+    }
+}

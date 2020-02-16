@@ -1,28 +1,36 @@
-//@ts-check
+import { isString, isSymbol, isFunction } from './helpers';
+import { EmisorHook, EmisorHookEventStr } from './hook';
+
 export * from './plugin';
 
 /**
- * @typedef {import('./plugin').IEmisorPlugin} IEmisorPlugin
+ * @typedef {import('./hook').EmisorHookFnc} EmisorHookFnc
  */
 /**
- * @typedef {import('./plugin').EmisorPluginHooks} EmisorPluginHooks
+ * @typedef {import('./hook').EmisorHookMeta} EmisorHookMeta
  */
-
+/**
+ * @typedef {import('./plugin').IEmisorPlugin} IEmisorPlugin
+ */
 
 /**
  * @typedef {object} EmisorOptions
- * @property {string} [nsSeparator] separator options
- * @property {IEmisorPlugin[]} [plugins] plugins 
- * @property {boolean} [debug] enable debugging
+ * @prop {string} [nsSeparator='.'] namespace separator options
+ * @prop {string} [postfixSeparator=':'] postfix separator
+ * @prop {IEmisorPlugin[]} [plugins] plugins
  */
-
+ 
 /**
  * @typedef {string|Symbol} EmisorEvent
  */
 
+/**
+  * @typedef {Object<string|number, any>} EmisorEventOptions
+  */
+
  
 /**
- * @typedef {Map<string, Set<function>>} EmisorPluginHooksMap
+ * @typedef {Map<string, EmisorHookFnc[]>} EmisorPluginHooksMap
  */
 
 /**
@@ -31,11 +39,29 @@ export * from './plugin';
 
 /**
  * @typedef {object} EmisorEventObject
- * @property {string} id of event `1-1`
- * @property {EmisorEvent} event that triggered the handler
- * @property {EmisorEventHandler} handler
+ * @prop {string} [id] of event `1-1`
+ * @prop {number} time unix timestamp of publish time
+ * @prop {EmisorEvent} event that triggered the handler
+ * @prop {EmisorEventHandler} [handler]
+ * @prop {*} [tag]
  */
 
+
+/**
+  * @typedef {object} EmisorChainingAPI
+  * @prop {EmisorCore["on"]} on
+  * @prop {EmisorCore["emit"]} emit
+  * @prop {EmisorCore["off"]} off
+  */
+
+/**
+  * @typedef {object} EmisorHookAPI
+  * @prop {EmisorCore["on"]} on
+  * @prop {EmisorCore["emit"]} emit
+  * @prop {EmisorCore["off"]} off
+  * @prop {Function} rawEmit
+  * @prop {Function} parseEvent
+  */
 
 /**
  * @callback EmisorEventHandler
@@ -43,9 +69,9 @@ export * from './plugin';
  * @param {EmisorEventObject} $event
  */
 
-
-
 const DEFAULT_NS_SEPARATOR = '.';
+const DEFAULT_POSTFIX_SEPARATOR = ':';
+
 
 export class EmisorCore {
   /**
@@ -54,14 +80,48 @@ export class EmisorCore {
   #subs = new Map()
 
   /**
-   * @type {Map<string, IEmisorPlugin>}
-   */
-  #plugins = new Map()
-
-  /**
    * @type {string} namespace separator
    */
   #nsSeparator
+  /**
+   * Hook that will be trigger before subscribed to a event 
+   */
+  #beforeOnHook = new EmisorHook()
+  /**
+   * Hook that will be trigger after subscribed to a event 
+   */
+  #afterOnHook = new EmisorHook()
+  /**
+   * Hook that will be trigger before event emit
+   */
+  #beforeEmitHook = new EmisorHook()
+  /**
+   * Hook that will be trigger after event emit
+   */
+  #afterEmitHook = new EmisorHook()
+  /**
+   * Hook that will be trigger before event is unsubscribed
+   */
+  #beforeOffHook = new EmisorHook()
+  /**
+   * Hook that will be trigger after event is unsubscribed
+   */
+  #afterOffHook = new EmisorHook()
+
+  #eventStrHook = new EmisorHookEventStr()
+
+  /**
+   * @type {EmisorHookAPI}
+   */
+  get #hookApi () {
+    return {
+      on: (...args) => this.on(...args),
+      emit: (...args) => this.emit(...args),
+      off: (...args) => this.off(...args),
+      rawEmit: (...args) => this.#rawEmit(...args),
+      parseEvent: (event) => this.#parseEvent(event)
+    }
+  }
 
   /**
    * 
@@ -69,10 +129,23 @@ export class EmisorCore {
    */
   constructor ({
     nsSeparator = DEFAULT_NS_SEPARATOR,
+    postfixSeparator = DEFAULT_POSTFIX_SEPARATOR,
     plugins = []
   } = {}) {
     this.#nsSeparator = nsSeparator;
-    plugins.forEach((plugin) => this.#plugins.set(plugin.key, plugin));
+    this.#eventStrHook.postfixSeparator = postfixSeparator;
+
+    plugins.forEach((plugin) => {
+      plugin.install({
+        beforeOn: this.#beforeOnHook.pluginApi,
+        afterOn: this.#afterOnHook.pluginApi,
+        beforeEmit: this.#beforeEmitHook.pluginApi,
+        afterEmit: this.#afterEmitHook.pluginApi,
+        beforeOff: this.#beforeOffHook.pluginApi,
+        afterOff: this.#afterOffHook.pluginApi,
+        eventStr: this.#eventStrHook.pluginApi
+      });
+    });
   }
 
   /**
@@ -80,13 +153,52 @@ export class EmisorCore {
    * @param {EmisorEvent} event 
    * @param {EmisorEventHandler} handler 
    * @param {object} [options]
-   * @returns {EmisorCore}
    */
   on (event, handler, options = {}) {
+    if(isString(event)) {
+      let result = this.#eventStrHook.parseStr(/** @type {string}*/ (event));
+      event = result.event;
+      options = {
+        ...result.options,
+        ...options
+      };
+    }
+
     if(!this.#subs.has(event)) {
       this.#subs.set(event, new Map());
     }
-    this.#subs.get(event).set(handler, this.#parseOptions(options));
+    let beforeOn = [
+        ...this.#beforeOnHook.getOptionHooks(options, this.#hookApi),
+        ...this.#beforeOnHook.getAllHooks(this.#hookApi)
+      ],
+      afterOn = [
+        ...this.#afterOnHook.getOptionHooks(options, this.#hookApi),
+        ...this.#afterOnHook.getAllHooks(this.#hookApi)
+      ],
+      $event = {
+        time: Date.now(),
+        event,
+        handler
+      };
+    
+    //before on hooks
+    beforeOn.forEach((hook) => {
+      let {handler: overwriteHandler} = hook($event) || {};
+      if (overwriteHandler) {
+        handler = overwriteHandler;
+      }
+    });
+    
+    //subscribe
+    this.#subs.get(event).set(handler, new Map([
+      ['beforeEmit', this.#beforeEmitHook.getOptionHooks(options, this.#hookApi)],
+      ['afterEmit', this.#afterEmitHook.getOptionHooks(options, this.#hookApi)],
+      ['beforeOff', this.#beforeOffHook.getOptionHooks(options, this.#hookApi)],
+      ['afterOff', this.#afterOffHook.getOptionHooks(options, this.#hookApi)]
+    ]));
+    //after on hooks
+    afterOn.forEach((hook) => hook($event));
+
     return this;
   }
   /**
@@ -120,92 +232,91 @@ export class EmisorCore {
    * 
    * @param {EmisorEvent} event 
    * @param {*} [payload] 
+   * @return {EmisorChainingAPI}
    */
   emit (event, payload) {
-    /** @type {Array<[EmisorEventHandler, EmisorPluginHooksMap]>} */
-    let subs = [],
-      parsedEvents = [];
+    this.#rawEmit(event, payload);
+    return this;
+  }
 
-    if (typeof event === 'symbol') {
-      parsedEvents = [event, '*'];
-    } else if (typeof event === 'string') {
-      parsedEvents = event.split(this.#nsSeparator)
+  /**
+   * @param {EmisorEvent} event
+   * @returns {EmisorEvent[]} 
+   */
+  #parseEvent (event) {
+    if (isSymbol(event)) {
+      return [event, '*'];
+    } else if (isString(event)) { 
+      return /** @type {string} **/ (event)
+        .split(this.#nsSeparator)
         .map((_, i, arr) => [...arr.slice(0,i), '*'].join(this.#nsSeparator))
-        .concat(`${event}${this.#nsSeparator}*`, event)
+        .concat(`${event}${this.#nsSeparator}*`, /** @type {string} **/ (event))
         .reverse();
     }
+  }
 
+  /**
+   * 
+   * @param {EmisorEvent} event 
+   * @param {*} [payload]
+   * @param {EmisorEventHandler|EmisorEventHandler[]} [only]
+   * @param {*} [tag]
+   */
+  async #rawEmit (event, payload, only, tag) {
+    /** @type {Array<[EmisorEventHandler, EmisorPluginHooksMap]>} */
+    let subs = [], 
+      parsedEvents = this.#parseEvent(event);
+    only = /** @type {EmisorEventHandler[]} **/ (isFunction(only) ? [only] : only);
     parsedEvents.forEach((event) => {
       if(this.#subs.has(event)) {
         subs = [
           ...subs,
           ...Array.from(this.#subs.get(event))
+          .filter(([handler]) => only ? /** @type {EmisorEventHandler[]} **/ (only).includes(handler) : true)
         ];
       }
     });
 
-    subs.forEach(([handler, hooks]) => this.#handleEmit({
+    if (subs.length === 0) {
+      this.#beforeEmitHook.getAllHooks(this.#hookApi)
+      .forEach((hook) => hook({
+        event,
+        time: Date.now(),
+        tag
+      }, payload));
+    }
+    subs.map(([handler, hooks]) => Promise.resolve({
       event,
+      tag,
       handler,
       payload,
       hooks
-    }));
-    
-    return this;
+    }))
+    .forEach((p) => p.then((d) => this.#publish(d)));
   }
 
   /**
-   * @param {{event: EmisorEvent, handler: EmisorEventHandler, payload: any, hooks: EmisorPluginHooksMap}} param1
+   * @param {{event: EmisorEvent, handler: EmisorEventHandler, payload: any, tag: any, hooks: EmisorPluginHooksMap}} param1
    */
-  #handleEmit ({event, handler, payload, hooks}) {
+  #publish ({event, handler, payload, hooks, tag}) {
     let $event = {
       event,
       handler,
-      id: '1'
+      time: Date.now(),
+      id: '1',
+      tag
     };
-    
-    //before emit
-    hooks.get('beforeEmit').forEach((hook) => hook($event))
+    //before emit hooks
+    [
+      ...hooks.get('beforeEmit'),
+      ...this.#beforeEmitHook.getAllHooks(this.#hookApi)
+    ].forEach((hook) => hook($event, payload));
     //emit
-    handler(payload, $event)
-    //after emit
-    hooks.get('afterEmit').forEach((hook) => hook($event))
-  }
-
-  /**
-   * 
-   * @param {object} options 
-   * @returns {EmisorPluginHooksMap}
-   */
-  #parseOptions (options) {
-    let hooks = new Map([
-        ['afterEmit', new Set()],
-        ['beforeEmit', new Set()]
-      ]),
-      addHook = (hook, plugin, key) => {
-        hooks.get(hook).add(
-          plugin[hook].bind(plugin, 
-            this, 
-            {[key]: options[key]},
-            {}
-          )
-        )
-      };
-
-    Object.keys(options)
-    .forEach((key) => {
-      if (this.#plugins.has(key)) {
-        let plugin = this.#plugins.get(key);
-        //add to after
-        if (plugin.afterEmit) {
-          addHook('afterEmit', plugin, key)
-        }
-        if (plugin.beforeEmit) {
-          addHook('beforeEmit', plugin, key)
-        }
-      }
-    });
-
-    return hooks;
+    handler(payload, $event);
+    //after emit hooks
+    [
+      ...hooks.get('afterEmit'),
+      ...this.#afterEmitHook.getAllHooks(this.#hookApi)
+    ].forEach((hook) => hook($event, payload));
   }
 }

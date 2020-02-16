@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
-        "target": "es2020",
+        "target": "esnext",
         "moduleResolution": "node",
-        "module": "es6"
+        "module": "esnext"
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "**/node_modules/*"
     ]
 }

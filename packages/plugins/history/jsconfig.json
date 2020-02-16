@@ -1,0 +1,11 @@
+{
+    "extends": "../../../jsconfig.json",
+    "typeAcquisition": {
+        "enable": true,
+        "include": ["jest"]
+    },
+    "include": [
+        "src",
+        "tests"
+    ]
+}

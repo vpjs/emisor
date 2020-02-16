@@ -1,33 +1,64 @@
-//@ts-check
 import { EmisorPlugin } from '@emisor/core';
 
-const COUNT = Symbol('count');
+/**
+ * @typedef {import("@emisor/core").IEmisorPlugin} IEmisorPlugin
+ */
 
+const COUNT = Symbol();
+const DEFAULT_KEY = 'count';
+const POSTFIX_ON_KEY = /#(?<count>[1-9]\d*)/;
+
+/**
+ * @implements {IEmisorPlugin}
+ */
 export class EmisorPluginCount extends EmisorPlugin {
-  
+  #key
+
   /**
-   * @param {{key: string}} [options]
+   * @param {object} [options]
+   * @param {string} [options.key='count']
    */
-  constructor ({key = 'count'}) {
-    super({key});
+  constructor ({key = DEFAULT_KEY} = {}) { 
+    super();
+    this.#key = key;
   }
-  
+
   /**
-   * @param {import('@emisor/core').EmisorCore} Emisor 
-   * @param {import('@emisor/core').EmisorEventObject} $event 
-   * @param {object} $config
+   * @param {import('@emisor/core').EmisorPluginHook} hook 
    */
-  afterEmit (Emisor, $config, _, $event) {
-    //key should contain a number what is higher then 0
-    if ($config[this.key] > 0) {
-      //get account
-      $config[COUNT] = $config[COUNT] ?? $config[this.key];
-      if ($config[COUNT] === 1) {
-        Emisor.off($event.event, $event.handler);
-      } else {
-        $config[COUNT]--;
+  install(hook) {
+    hook.eventStr.postfix(POSTFIX_ON_KEY, ($event) =>  {
+      let {count} = POSTFIX_ON_KEY.exec($event).groups;
+      return {count};
+    });
+    hook.beforeOn.key(
+      this.#key,
+      (...args) => this.#beforeOn(...args)
+    );
+  }
+
+  /**
+   * 
+   * @param {import('@emisor/core').EmisorHookMeta} meta
+   * @param {import('@emisor/core').EmisorHookAPI} Emisor 
+   */
+  #beforeOn ({event: {handler}, options}, Emisor) {
+    if (options > 0) {
+      let count = options;
+      return {
+        /**
+         * @type {import('@emisor/core').EmisorEventHandler}
+         */
+        handler: (data, $event) => {
+          if (count === 1) {
+            Emisor.off($event.event, $event.handler);
+          }
+          if (count) {
+            handler(data, $event);
+            count--;
+          }
+        }
       }
     }
   }
-
 }

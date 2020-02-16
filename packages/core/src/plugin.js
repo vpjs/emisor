@@ -1,53 +1,40 @@
-//@ts-check
-
 /**
- * @callback beforeEmitHook
- * @param {import('./index').EmisorCore} Emisor 
- * @param {object} $config
- * @param {object} $storage
- * @param {import('./index').EmisorEventObject} $event
- * @return {Promise}
+ * @typedef {import('./hook').EmisorHook} EmisorHook
+ * @typedef {import('./hook').EmisorHookEventStr} EmisorHookEventStr
  */
 
 /**
- * @callback afterEmitHook
- * @param {import('./index').EmisorCore} Emisor 
- * @param {object} $config
- * @param {object} $storage
- * @param {import('./index').EmisorEventObject} $event
- * @return {Promise}
+ * @typedef {object} EmisorPluginHook 
+ * @prop {EmisorHook["pluginApi"]} beforeOn
+ * @prop {EmisorHook["pluginApi"]} afterOn
+ * @prop {EmisorHook["pluginApi"]} beforeEmit
+ * @prop {EmisorHook["pluginApi"]} afterEmit
+ * @prop {EmisorHook["pluginApi"]} beforeOff
+ * @prop {EmisorHook["pluginApi"]} afterOff
+ * @prop {EmisorHookEventStr["pluginApi"]} eventStr
  */
 
 /**
- * @typedef {beforeEmitHook|afterEmitHook} EmisorPluginHooks
+ * @typedef {object} IEmisorPlugin
+ * @prop {(EmisorPluginHook)=>void} install - install plugin
  */
 
 /**
- * @typedef IEmisorPlugin
- * @property {beforeEmitHook} beforeEmit
- * @property {afterEmitHook} afterEmit
- * @property {string} key
+ * Error object
  */
-
 export class EmisorPluginError extends Error {}
- 
-export class EmisorPlugin {
-  #key
-    
-  get key () {
-    return this.#key;
+
+export class EmisorPluginTypeError extends EmisorPluginError {
+  constructor(param, expect, given) {
+    super(`${param} has to be a ${expect}, ${typeof given} given`);
   }
-    
-  /**
-   * @param {{key: string}} options
-   */
-  constructor ({key}) {
-    if (typeof key !== 'string') {
-      throw new EmisorPluginError(`Plugin key has to be a string, ${typeof key} given`);
-    }
-    if (!key) {
-      throw new EmisorPluginError('Plugin key can not be empty');
-    }
-    this.#key =  key;
+}
+
+/**
+ * @implements {IEmisorPlugin}
+ */
+export class EmisorPlugin {
+  install () {
+    throw new EmisorPluginError('Plugin is missing a install method');
   }
 }

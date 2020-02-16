@@ -1,8 +1,10 @@
 {
   "npmClient": "yarn",
   "packages": [
+    "packages/emisor",
     "packages/core",
     "packages/plugins/*"
   ],
+  "useWorkspaces": true,
   "version": "independent"
 }

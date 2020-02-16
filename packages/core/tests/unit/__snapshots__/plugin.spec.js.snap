@@ -1,7 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EmisorPlugin key should be string: empty 1`] = `"Plugin key can not be empty"`;
-
-exports[`EmisorPlugin key should be string: no key 1`] = `"Cannot read property 'key' of undefined"`;
-
-exports[`EmisorPlugin key should be string: wrong type 1`] = `"Plugin key has to be a string, number given"`;
+exports[`EmisorPlugin plugin should have method install 1`] = `"Plugin is missing a install method"`;

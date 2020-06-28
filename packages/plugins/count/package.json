@@ -2,10 +2,10 @@
   "name": "@emisor/plugin-count",
   "version": "1.0.0",
   "description": "Count Plugin for Emisor",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "author": "Victor Perez <vpjs@victor-perez.nl>",
   "private": false,
   "dependencies": {
-    "@emisor/core": "*"
+    "@emisor/core": "file:../../core/src"
   }
 }

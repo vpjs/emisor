@@ -1,4 +1,4 @@
-const { Emisor } = require('../../src');
+import { Emisor } from  '../../src';
 import { delay } from '../../../../helpers/test';
 
 describe('Emisor', () => {

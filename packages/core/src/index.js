@@ -203,8 +203,8 @@ export class EmisorCore {
   }
   /**
    * Unsubscribe
-   * If no `event` is given, all subscribe will be unsubscribe 
-   * if no `handler` is given all subscribe of the given `event` will be unsubscribe
+   * If no `event` is given, all subscribe will be unsubscribed 
+   * if no `handler` is given all subscribe of the given `event` will be unsubscribed
    * @param {EmisorEvent} [event] unsubscribe to a specific event
    * @param {EmisorEventHandler} [handler] unsubscribe to a specific handler
    */

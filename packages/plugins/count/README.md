@@ -11,6 +11,9 @@ This plugin add support for subscribing for a x amount of time to a event
 ### count options
 the `count` option should always be a number what will be the max amount of time the subscriber can be triggered 
 
+### postfix options
+the postfix format is  `#N` where `N` is e.q. to `count` option 
+
 ## Examples
 
 ```js
@@ -33,5 +36,10 @@ Emitter.on('test', () => console.count('test'), { count: 3 });
 Emitter.emit('test') //will log "test: 1"
 Emitter.emit('test') //will log "test: 2"
 Emitter.emit('test') //will log "test: 3"
+Emitter.emit('test') //will log nothing
+
+//subscribe once
+Emitter.on('test:#1', () => console.count('test'));
+Emitter.emit('test') //will log "test: 1"
 Emitter.emit('test') //will log nothing
 ```

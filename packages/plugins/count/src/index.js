@@ -4,7 +4,6 @@ import { EmisorPlugin } from '@emisor/core';
  * @typedef {import("@emisor/core").IEmisorPlugin} IEmisorPlugin
  */
 
-const COUNT = Symbol();
 const DEFAULT_KEY = 'count';
 const POSTFIX_ON_KEY = /#(?<count>[1-9]\d*)/;
 

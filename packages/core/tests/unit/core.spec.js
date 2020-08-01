@@ -148,3 +148,20 @@ describe.each([
     expect(sub2).toBeCalledTimes(2);
   });
 });
+
+describe('Namespace wildcard', () => {
+  test('channel subscribers', async () => {
+    let Emitter = new EmisorCore(),
+      sub1 = jest.fn(),
+      sub2 = jest.fn(); 
+    Emitter
+      .on('car.*.door.open', sub1)
+      .on('car.left.*.open', sub2)
+      .emit('car.left.door.open')
+      .emit('car.right.door.open')
+      .emit('car.left.window.open');
+    await delay();
+    expect(sub1).toBeCalledTimes(2);
+    expect(sub2).toBeCalledTimes(2);
+  });
+});

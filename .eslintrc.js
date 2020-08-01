@@ -11,6 +11,9 @@ module.exports = {
       'rootMode': 'upward'
     }
   },
+  'plugins': [
+    'babel'
+  ],
   'extends': 'eslint:recommended',
   'rules': {
     'indent': [

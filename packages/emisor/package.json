@@ -5,6 +5,10 @@
   "main": "dist/index.js",
   "author": "Victor Perez <vpjs@victor-perez.nl>",
   "private": false,
+  "readmeFilename": "README.md",
+  "files": [
+    "lib"
+  ],
   "dependencies": {
     "@emisor/core": "file:../core/src",
     "@emisor/plugin-count": "file:../plugins/count/src",

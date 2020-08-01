@@ -155,6 +155,8 @@ export class EmisorCore {
    * @param {object} [options]
    */
   on (event, handler, options = {}) {
+      
+
     if(isString(event)) {
       let result = this.#eventStrHook.parseStr(/** @type {string}*/ (event));
       event = result.event;
@@ -247,11 +249,19 @@ export class EmisorCore {
     if (isSymbol(event)) {
       return [event, '*'];
     } else if (isString(event)) { 
-      return /** @type {string} **/ (event)
-        .split(this.#nsSeparator)
-        .map((_, i, arr) => [...arr.slice(0,i), '*'].join(this.#nsSeparator))
-        .concat(`${event}${this.#nsSeparator}*`, /** @type {string} **/ (event))
-        .reverse();
+      let ns = /** @type {string} **/ (event).split(this.#nsSeparator);
+      return [
+        event,
+        `${event}${this.#nsSeparator}*`,
+        ...ns.map((_, i, arr) => {
+          let x = [...arr];
+          x[i] = '*';
+          return [
+            x.join(this.#nsSeparator),
+            [...arr.slice(0,i), '*'].join(this.#nsSeparator)
+          ]
+        }).flat()
+      ].filter((v, i, a) => a.indexOf(v) === i)
     }
   }
 

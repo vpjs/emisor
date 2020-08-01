@@ -3,7 +3,6 @@
   "private": true,
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-private-methods": "^7.8.3",
     "@babel/preset-env": "^7.8.4",
@@ -14,7 +13,8 @@
     "@stryker-mutator/jest-runner": "3",
     "babel-eslint": "^11.0.0-beta.2",
     "babel-jest": "26.x",
-    "eslint": "7",
+    "eslint": "^7.6.0",
+    "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-jest": "^23.7.0",
     "jest": "^26.0.1",
     "jest-extended": "^0.11.5",

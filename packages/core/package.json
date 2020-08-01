@@ -4,5 +4,9 @@
   "description": "Advanced event emitter core",
   "main": "dist/index.js",
   "author": "Victor Perez <vpjs@victor-perez.nl>",
+  "readmeFilename": "README.md",
+  "files": [
+    "lib"
+  ],
   "private": false
 }

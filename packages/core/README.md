@@ -1,7 +1,45 @@
 Emisor core
 =========================
-work in progress
+:construction: work in progress
 
+## Events
+Emisor supports 2 type of events, `Symbol` and `string`. `String` based events are more powerful then the "simpler" `Symbol` based events. `String` based events support namespaces, the default namespace separator is `.`.
+
+### Channel filter
+Channel filters can only be used by `string` based events and the following filters are supported:
+- Wildcard `*`
+
+You can only filter on 1 or more namespaces you can not filter on the event substring, meaning that `test.*` is valid filter and `test*` is a invalid filter.
+
+#### Wildcard filter: `*`
+
+| usage | description |
+| - | - |
+| `*` | subscribe to any event |
+| `namespace.*` | subscribe to any event that starts with the namespace as well to the exact match of the namespace | 
+| `namespace.*.namespace` | You can use a wildcard for one part of the namespace. |
+
+```js
+Emitter.on('test.*', (d) => console.log(d));
+//This will trigger the subscriber
+Emitter.emit('test', 1);
+//but also any event that starts with the test namespace
+Emitter.emit('test.test', 2);
+Emitter.emit('test.test.etc', 3);
+```
+
+```js
+Emitter.on('car.*.door.open', (d) => console.log(d));
+//These events will trigger the subscriber
+Emitter.emit('car.left.door.open', true);
+Emitter.emit('car.right.door.open', true);
+```
+
+### Plugin postfix
+Some plugin support to set options via the postfix of the event `string`, for example the count plugin can be triggered via `this.should.be.called.once:#1`. The default postfix separator is `:`
+
+### Plugin prefix
+:construction: work in progress
 
 ## Methods
 
@@ -43,7 +81,7 @@ unsubscribe from a event
 Emit a event
 
 #### params
-| name | type | description |
+| name | type |
 | - | - | - |
-| event | `string|Symbol` | unsubscribe to a specific event |
-| payload | `function` | unsubscribe to a specific handler |
+| event | `string|Symbol` |
+| payload | `any` | 

@@ -1,18 +1,18 @@
 History Plugin for Emisor
 =========================
-This plugin will create a history of every or specific events that are published, what can be replayed on subscribe.
+This plugin will create a history of every or specific events that are published, what can be replayed on subscribe. _(Filtered events are not yet supported)_
 
 ### Plugin options
 
 | key | type | default | description |
 | - | - | - | - |
-| mode | `Symbol` | `MODE_DEFAULT_ALLOW` | `MODE_DEFAULT_ALLOW` = allow history on every event and deny history on events listed inside the `events` options. `MODE_DEFAULT_DENY` = deny history on every event and allow history on events listed inside the `events` options. |
+| mode | `Symbol` | `MODE_DEFAULT_ALLOW` | <ul><li>`MODE_DEFAULT_ALLOW`: allow history on every event and deny history on events listed inside the `events` options.</li><li> `MODE_DEFAULT_DENY`: deny history on every event and allow history on events listed inside the `events` options. </li></ul> |
 | events | `Array<Symbol|string>` | `[]` | see mode, allow or deny history on listed events |
 | key | `string` | `history` | |
 | maxLength | `number` | `1` | max history length |
 
 ### History options
-the `history` option allowed 2 type of values `boolean` e.q. `true` and any `number` higher then `0`. If `history` is set to `true` it will replay the full history. When given a `number` it will only replay that amount of history.
+the `history` option allowed 2 type of values `boolean` e.q. `true` and any `number` higher then `0`. If `history` is set to `true` it will replay the full history (e.q. to `maxLength`). When given a `number` it will only replay that amount of history.
 
 ## Examples
 

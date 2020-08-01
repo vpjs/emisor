@@ -28,5 +28,8 @@
   "scripts": {
     "test": "jest",
     "test:mutation": "stryker run"
+  },
+  "resolutions": {
+    "dot-prop": "^5.1.1"
   }
 }

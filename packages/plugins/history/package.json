@@ -16,7 +16,10 @@
       "type": "git",
       "url": "git+https://github.com/vpjs/emisor.git",
       "directory": "packages/plugins/history"
-     },
+    },
+    "publishConfig": {
+      "access": "public"
+    },
     "files": [
       "dist"
     ],

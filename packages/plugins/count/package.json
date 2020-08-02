@@ -17,6 +17,9 @@
     "url": "git+https://github.com/vpjs/emisor.git",
     "directory": "packages/plugins/count"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],

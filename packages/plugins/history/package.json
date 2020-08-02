@@ -1,27 +1,27 @@
 {
     "name": "@emisor/plugin-history",
-    "version": "1.0.0-alpha.0",
+    "version": "1.0.0-alpha.1",
     "description": "History Plugin for Emisor",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "readmeFilename": "README.md",
     "license": "Apache License v2.0",
     "author": {
-      "name": "Victor Perez",
-      "email": "vpjs@victor-perez.nl",
-      "url": "https://github.com/victor-perez"
+        "name": "Victor Perez",
+        "email": "vpjs@victor-perez.nl",
+        "url": "https://github.com/victor-perez"
     },
     "homepage": "https://github.com/vpjs/emisor/tree/master/packages/plugins/history#readme",
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/vpjs/emisor.git",
-      "directory": "packages/plugins/history"
+        "type": "git",
+        "url": "git+https://github.com/vpjs/emisor.git",
+        "directory": "packages/plugins/history"
     },
     "publishConfig": {
-      "access": "public"
+        "access": "public"
     },
     "files": [
-      "dist"
+        "dist"
     ],
     "scripts": {
         "build": "rollup -c"
@@ -30,7 +30,7 @@
         "@emisor/core": "file:../../core/src"
     },
     "devDependencies": {
-        "rollup": "^2.23.0",
-        "@emisor/plugin-count": "file:../count/src"
+        "@emisor/plugin-count": "file:../count/src",
+        "rollup": "^2.23.0"
     }
 }

@@ -27,8 +27,8 @@
     "rollup": "^2.23.0"
   },
   "dependencies": {
-    "@emisor/core": "file:../core/src",
-    "@emisor/plugin-count": "file:../plugins/count/src",
-    "@emisor/plugin-history": "file:../plugins/history/src"
+    "@emisor/core": "*",
+    "@emisor/plugin-count": "*",
+    "@emisor/plugin-history": "*"
   }
 }

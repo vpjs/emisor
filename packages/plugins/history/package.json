@@ -27,10 +27,10 @@
         "build": "rollup -c"
     },
     "dependencies": {
-        "@emisor/core": "file:../../core/src"
+        "@emisor/core": "*"
     },
     "devDependencies": {
-        "@emisor/plugin-count": "file:../count/src",
+        "@emisor/plugin-count": "*",
         "rollup": "^2.23.0"
     }
 }

@@ -30,6 +30,6 @@
     "rollup": "^2.23.0"
   },
   "dependencies": {
-    "@emisor/core": "file:../../core/src"
+    "@emisor/core": "*"
   }
 }

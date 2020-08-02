@@ -903,15 +903,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@emisor/core@file:packages/core/src":
-  version "0.0.0"
-
-"@emisor/plugin-count@file:packages/plugins/count/src":
-  version "0.0.0"
-
-"@emisor/plugin-history@file:packages/plugins/history/src":
-  version "0.0.0"
-
 "@evocateur/libnpmaccess@^3.1.2":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@evocateur/libnpmaccess/-/libnpmaccess-3.1.2.tgz#ecf7f6ce6b004e9f942b098d92200be4a4b1c845"

@@ -5,6 +5,15 @@
     "packages/core",
     "packages/plugins/*"
   ],
+  "command": {
+    "version": {
+      "allowBranch": "master",
+      "conventionalCommits": true,
+      "exact": true,
+      "gitRemote": "upstream",
+      "message": "chore(release): %s"
+    }
+  },
   "useWorkspaces": true,
   "version": "independent"
 }

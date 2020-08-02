@@ -10,10 +10,10 @@
       "allowBranch": "master",
       "conventionalCommits": true,
       "exact": true,
-      "gitRemote": "upstream",
+      "gitRemote": "origin",
       "message": "chore(release): %s"
     }
   },
   "useWorkspaces": true,
-  "version": "independent"
+  "version": "1.0.0-alpha.2"
 }

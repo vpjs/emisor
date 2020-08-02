@@ -3,10 +3,27 @@
   "version": "1.0.0",
   "description": "Advanced event emitter core",
   "main": "dist/index.js",
-  "author": "Victor Perez <vpjs@victor-perez.nl>",
+  "module": "dist/index.mjs",
   "readmeFilename": "README.md",
+  "license": "Apache License v2.0",
+  "author": {
+    "name": "Victor Perez",
+    "email": "vpjs@victor-perez.nl",
+    "url": "https://github.com/victor-perez"
+  },
+  "homepage": "https://github.com/vpjs/emisor/tree/master/packages/core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vpjs/emisor.git",
+    "directory": "packages/core"
+  },
   "files": [
-    "lib"
+    "dist"
   ],
-  "private": false
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^2.23.0"
+  }
 }

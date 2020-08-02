@@ -3,12 +3,29 @@
   "version": "1.0.0",
   "description": "Count Plugin for Emisor",
   "main": "dist/index.js",
-  "author": "Victor Perez <vpjs@victor-perez.nl>",
-  "private": false,
+  "module": "dist/index.mjs",
   "readmeFilename": "README.md",
+  "license": "Apache License v2.0",
+  "author": {
+    "name": "Victor Perez",
+    "email": "vpjs@victor-perez.nl",
+    "url": "https://github.com/victor-perez"
+  },
+  "homepage": "https://github.com/vpjs/emisor/tree/master/packages/plugins/count#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vpjs/emisor.git",
+    "directory": "packages/plugins/count"
+  },
   "files": [
-    "lib"
+    "dist"
   ],
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^2.23.0"
+  },
   "dependencies": {
     "@emisor/core": "file:../../core/src"
   }

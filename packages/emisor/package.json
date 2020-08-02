@@ -1,6 +1,6 @@
 {
   "name": "emisor",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Advanced event emitter",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@emisor/core",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "Advanced event emitter core",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

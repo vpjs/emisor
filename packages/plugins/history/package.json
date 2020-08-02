@@ -1,6 +1,6 @@
 {
     "name": "@emisor/plugin-history",
-    "version": "1.0.0-alpha.5",
+    "version": "1.0.0-alpha.6",
     "description": "History Plugin for Emisor",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -27,10 +27,10 @@
         "build": "rollup -c"
     },
     "dependencies": {
-        "@emisor/core": "1.0.0-alpha.5"
+        "@emisor/core": "1.0.0-alpha.6"
     },
     "devDependencies": {
-        "@emisor/plugin-count": "1.0.0-alpha.5",
+        "@emisor/plugin-count": "1.0.0-alpha.6",
         "rollup": "^2.23.0"
     }
 }

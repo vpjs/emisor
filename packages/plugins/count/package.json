@@ -1,6 +1,6 @@
 {
   "name": "@emisor/plugin-count",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Count Plugin for Emisor",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

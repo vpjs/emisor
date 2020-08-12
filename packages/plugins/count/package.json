@@ -1,6 +1,6 @@
 {
   "name": "@emisor/plugin-count",
-  "version": "1.0.1-alpha.0",
+  "version": "1.0.1-alpha.1",
   "description": "Count Plugin for Emisor",
   "main": "dist/index.js",
   "module": "src/index.js",
@@ -34,6 +34,7 @@
     "rollup": "^2.23.0"
   },
   "dependencies": {
-    "@emisor/core": "1.0.1-alpha.0"
-  }
+    "@emisor/core": "1.0.1-alpha.1"
+  },
+  "gitHead": "fd523fa556f5825d132ed2a2828d39eb105cc923"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@emisor/core",
-  "version": "1.0.1-alpha.0",
+  "version": "1.0.1-alpha.1",
   "description": "Advanced event emitter core",
   "main": "dist/index.js",
   "exports": {
@@ -31,9 +31,10 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "prepublishOnly": "build"
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "rollup": "^2.23.0"
-  }
+  },
+  "gitHead": "fd523fa556f5825d132ed2a2828d39eb105cc923"
 }

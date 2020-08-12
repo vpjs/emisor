@@ -4,6 +4,13 @@
         "enable": true,
         "include": ["jest"]
     },
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+          "*": ["src/*"],
+          "@emisor/core": ["@emisor/core/src"]
+        }
+    },
     "include": [
         "src",
         "tests"

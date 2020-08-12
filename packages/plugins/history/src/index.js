@@ -1,6 +1,4 @@
-import { EmisorPlugin } from '@emisor/core';
-import { isSymbol } from '@emisor/core/src/helpers';
-
+import { EmisorPlugin, helpers } from '@emisor/core';
 const REPLAY_TAG = Symbol();
 
 export const MODE_DEFAULT_ALLOW = Symbol('MODE_DEFAULT_ALLOW');
@@ -62,7 +60,7 @@ export class EmisorPluginHistory extends EmisorPlugin {
       history.slice(-maxLength).reverse().forEach(({payload, event}) => Emisor.rawEmit(event, payload, handler, REPLAY_TAG))
     }
     //when event is a Symbol
-    if (isSymbol(event) || !(event).includes('*')) {
+    if (helpers.isSymbol(event) || !(event).includes('*')) {
       return replay(this.#history.get(event));
     }
   }

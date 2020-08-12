@@ -1,6 +1,6 @@
 import { EmisorCore } from '@emisor/core';
 import { EmisorPluginHistory, MODE_DEFAULT_DENY, MODE_DEFAULT_ALLOW } from '../../src';
-import {delay} from '../../../../../helpers/test';
+import {delay} from 'test-helpers/test';
 
 describe.each([
   true,

@@ -1,36 +1,40 @@
 {
-    "name": "@emisor/plugin-history",
-    "version": "1.0.0-alpha.6",
-    "description": "History Plugin for Emisor",
-    "main": "dist/index.js",
-    "module": "dist/index.mjs",
-    "readmeFilename": "README.md",
-    "license": "Apache License v2.0",
-    "author": {
-        "name": "Victor Perez",
-        "email": "vpjs@victor-perez.nl",
-        "url": "https://github.com/victor-perez"
-    },
-    "homepage": "https://github.com/vpjs/emisor/tree/master/packages/plugins/history#readme",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/vpjs/emisor.git",
-        "directory": "packages/plugins/history"
-    },
-    "publishConfig": {
-        "access": "public"
-    },
-    "files": [
-        "dist"
-    ],
-    "scripts": {
-        "build": "rollup -c"
-    },
-    "dependencies": {
-        "@emisor/core": "1.0.0-alpha.6"
-    },
-    "devDependencies": {
-        "@emisor/plugin-count": "1.0.0-alpha.6",
-        "rollup": "^2.23.0"
-    }
+  "name": "@emisor/plugin-history",
+  "version": "1.0.0",
+  "description": "History Plugin for Emisor",
+  "main": "dist/index.js",
+  "module": "src/index.js",
+  "type": "module",
+  "readmeFilename": "README.md",
+  "license": "Apache License v2.0",
+  "author": {
+    "name": "Victor Perez",
+    "email": "vpjs@victor-perez.nl",
+    "url": "https://github.com/victor-perez"
+  },
+  "homepage": "https://github.com/vpjs/emisor/tree/master/packages/plugins/history#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vpjs/emisor.git",
+    "directory": "packages/plugins/history"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "build"
+  },
+  "dependencies": {
+    "@emisor/core": "1.0.0"
+  },
+  "devDependencies": {
+    "@emisor/plugin-count": "1.0.0",
+    "rollup": "^2.23.0"
+  }
 }

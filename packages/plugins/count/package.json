@@ -1,9 +1,10 @@
 {
   "name": "@emisor/plugin-count",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0",
   "description": "Count Plugin for Emisor",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "src/index.js",
+  "type": "module",
   "readmeFilename": "README.md",
   "license": "Apache License v2.0",
   "author": {
@@ -18,18 +19,22 @@
     "directory": "packages/plugins/count"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "prepublishOnly": "build"
+    
   },
   "devDependencies": {
     "rollup": "^2.23.0"
   },
   "dependencies": {
-    "@emisor/core": "1.0.0-alpha.6"
+    "@emisor/core": "1.0.0"
   }
 }

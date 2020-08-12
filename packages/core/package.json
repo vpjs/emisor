@@ -1,9 +1,13 @@
 {
   "name": "@emisor/core",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0",
   "description": "Advanced event emitter core",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "exports": {
+    "import": "./src/index.js",
+    "require": "./dist/index.js"
+  },
+  "type": "module",
   "readmeFilename": "README.md",
   "license": "Apache License v2.0",
   "author": {
@@ -18,13 +22,16 @@
     "directory": "packages/core"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "prepublishOnly": "build"
   },
   "devDependencies": {
     "rollup": "^2.23.0"

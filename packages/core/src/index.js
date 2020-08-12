@@ -1,6 +1,6 @@
 import { isString, isSymbol, isFunction } from './helpers';
 import { EmisorHook, EmisorHookEventStr } from './hook';
-
+export * as helpers from './helpers';
 export * from './plugin';
 
 /**

@@ -5,9 +5,10 @@
     "@babel/cli": "^7.10.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-proposal-private-methods": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "@rollup/plugin-babel": "^5.1.0",
-    "@rollup/plugin-node-resolve": "^8.4.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "@stryker-mutator/babel-transpiler": "^3.3.1",
     "@stryker-mutator/core": "3.3.1",
     "@stryker-mutator/javascript-mutator": "^3.3.1",
@@ -15,7 +16,9 @@
     "acorn-private-class-elements": "^0.2.6",
     "acorn-private-methods": "^0.3.2",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "26.2.2",
+    "babel-jest": "26.3.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "core-js": "3",
     "deepmerge": "^4.2.2",
     "eslint": "^7.6.0",
     "eslint-plugin-babel": "^5.3.1",
@@ -23,7 +26,8 @@
     "jest": "^26.2.2",
     "jest-extended": "^0.11.5",
     "lerna": "^3.22.1",
-    "rollup-plugin-terser": "^6.1.0"
+    "rollup-plugin-cleaner": "^1.0.0",
+    "rollup-plugin-terser": "^7.0.0"
   },
   "workspaces": [
     "packages/emisor",
@@ -32,7 +36,8 @@
   ],
   "scripts": {
     "test": "jest",
-    "test:mutation": "stryker run"
+    "test:mutation": "stryker run",
+    "build": "lerna run build"
   },
   "resolutions": {
     "dot-prop": "^5.1.1"

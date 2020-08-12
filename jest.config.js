@@ -22,8 +22,7 @@ module.exports =  {
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [
-    'packages/**/*.js',
-    '!packages/**/tests/**/*.js'
+    'packages/**/src/**/*.js',
   ],
 
   // The directory where Jest should output its coverage files
@@ -119,9 +118,9 @@ module.exports =  {
   // rootDir: undefined,
 
   // A list of paths to directories that Jest should use to search for files in
-  // roots: [
-  //   "<rootDir>"
-  // ],
+  roots: [
+    '<rootDir>/packages'
+  ],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",

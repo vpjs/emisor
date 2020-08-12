@@ -1,6 +1,6 @@
 import { EmisorCore } from '@emisor/core';
 import { EmisorPluginCount } from '../../src';
-import {delay} from '../../../../../helpers/test';
+import {delay} from 'test-helpers/test';
 
 describe.each([
   [undefined, 1], //default

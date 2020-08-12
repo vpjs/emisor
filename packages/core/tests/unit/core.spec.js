@@ -1,5 +1,5 @@
 import { EmisorCore } from '../../src/index';
-import { delay } from '../../../../helpers/test';
+import { delay } from 'test-helpers/test';
 
 describe ('EmisorCore signature', () => {
   const EmisorCoreSignature = expect.objectContaining({

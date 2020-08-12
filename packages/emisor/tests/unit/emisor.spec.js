@@ -1,5 +1,5 @@
 import { Emisor } from  '../../src';
-import { delay } from '../../../../helpers/test';
+import { delay } from 'test-helpers/test';
 
 describe('Emisor', () => {
   let Emitter = new Emisor();

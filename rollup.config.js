@@ -1,4 +1,4 @@
-import resolve from '@rollup/plugin-node-resolve';
+
 import { babel } from '@rollup/plugin-babel';
 import deepMerge from 'deepmerge';
 import { terser } from 'rollup-plugin-terser';
@@ -20,7 +20,7 @@ export default (config = {}) => deepMerge({
         './dist/'
       ]
     }),
-    resolve(),
+    // resolve(),
     babel({ rootMode: 'upward', babelHelpers: 'bundled' }),
     terser()
   ]

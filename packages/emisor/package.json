@@ -1,6 +1,6 @@
 {
   "name": "emisor",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Advanced event emitter",
   "main": "dist/index.js",
   "module": "src/index.js",
@@ -30,9 +30,9 @@
     "rollup": "^2.23.0"
   },
   "dependencies": {
-    "@emisor/core": "1.0.0-alpha.1",
-    "@emisor/plugin-count": "1.0.0-alpha.1",
-    "@emisor/plugin-history": "1.0.0-alpha.1"
+    "@emisor/core": "1.0.0-alpha.2",
+    "@emisor/plugin-count": "1.0.0-alpha.2",
+    "@emisor/plugin-history": "1.0.0-alpha.2"
   },
   "gitHead": "7c9b40a85840c1dc47e3aeb9af78e474823982d2"
 }

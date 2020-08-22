@@ -18,10 +18,6 @@
     "url": "git+https://github.com/vpjs/emisor.git",
     "directory": "packages/plugins/history"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com/"
-  },
   "files": [
     "dist",
     "src"
@@ -36,5 +32,6 @@
   "devDependencies": {
     "@emisor/plugin-count": "1.0.0-alpha.1",
     "rollup": "^2.23.0"
-  }
+  },
+  "gitHead": "7c9b40a85840c1dc47e3aeb9af78e474823982d2"
 }

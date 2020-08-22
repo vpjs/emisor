@@ -1,6 +1,6 @@
 {
   "name": "@emisor/plugin-count",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Count Plugin for Emisor",
   "main": "dist/index.js",
   "readmeFilename": "README.md",
@@ -31,7 +31,7 @@
     "rollup": "^2.23.0"
   },
   "dependencies": {
-    "@emisor/core": "1.0.0-alpha.3"
+    "@emisor/core": "1.0.0-alpha.4"
   },
   "gitHead": "7c9b40a85840c1dc47e3aeb9af78e474823982d2"
 }

@@ -1,6 +1,6 @@
 {
   "name": "emisor",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Advanced event emitter",
   "main": "dist/index.js",
   "readmeFilename": "README.md",
@@ -10,8 +10,8 @@
     "email": "vpjs@victor-perez.nl",
     "url": "https://github.com/victor-perez"
   },
-  "engines" : { 
-    "node" : ">11" 
+  "engines": {
+    "node": ">11"
   },
   "homepage": "https://github.com/vpjs/emisor/tree/master/packages/emisor#readme",
   "repository": {
@@ -31,9 +31,9 @@
     "rollup": "^2.23.0"
   },
   "dependencies": {
-    "@emisor/core": "1.0.0-alpha.2",
-    "@emisor/plugin-count": "1.0.0-alpha.2",
-    "@emisor/plugin-history": "1.0.0-alpha.2"
+    "@emisor/core": "1.0.0-alpha.3",
+    "@emisor/plugin-count": "1.0.0-alpha.3",
+    "@emisor/plugin-history": "1.0.0-alpha.3"
   },
   "gitHead": "7c9b40a85840c1dc47e3aeb9af78e474823982d2"
 }

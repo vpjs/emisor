@@ -1,12 +1,12 @@
 {
   "name": "@emisor/core",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Advanced event emitter core",
   "main": "dist/index.js",
   "readmeFilename": "README.md",
   "license": "Apache License v2.0",
-  "engines" : { 
-    "node" : ">11" 
+  "engines": {
+    "node": ">11"
   },
   "author": {
     "name": "Victor Perez",

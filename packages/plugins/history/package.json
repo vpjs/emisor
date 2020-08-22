@@ -1,6 +1,6 @@
 {
   "name": "@emisor/plugin-history",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "History Plugin for Emisor",
   "main": "dist/index.js",
   "readmeFilename": "README.md",
@@ -10,8 +10,8 @@
     "email": "vpjs@victor-perez.nl",
     "url": "https://github.com/victor-perez"
   },
-  "engines" : { 
-    "node" : ">11" 
+  "engines": {
+    "node": ">11"
   },
   "homepage": "https://github.com/vpjs/emisor/tree/master/packages/plugins/history#readme",
   "repository": {
@@ -28,10 +28,10 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@emisor/core": "1.0.0-alpha.2"
+    "@emisor/core": "1.0.0-alpha.3"
   },
   "devDependencies": {
-    "@emisor/plugin-count": "1.0.0-alpha.2",
+    "@emisor/plugin-count": "1.0.0-alpha.3",
     "rollup": "^2.23.0"
   },
   "gitHead": "7c9b40a85840c1dc47e3aeb9af78e474823982d2"

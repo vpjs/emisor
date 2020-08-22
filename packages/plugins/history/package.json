@@ -3,14 +3,15 @@
   "version": "1.0.0-alpha.2",
   "description": "History Plugin for Emisor",
   "main": "dist/index.js",
-  "module": "src/index.js",
-  "type": "module",
   "readmeFilename": "README.md",
   "license": "Apache License v2.0",
   "author": {
     "name": "Victor Perez",
     "email": "vpjs@victor-perez.nl",
     "url": "https://github.com/victor-perez"
+  },
+  "engines" : { 
+    "node" : ">11" 
   },
   "homepage": "https://github.com/vpjs/emisor/tree/master/packages/plugins/history#readme",
   "repository": {

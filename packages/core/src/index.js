@@ -73,7 +73,7 @@ const DEFAULT_NS_SEPARATOR = '.';
 const DEFAULT_POSTFIX_SEPARATOR = ':';
 
 
-export class EmisorCore {
+export default class EmisorCore {
   /**
    * @type {Map<EmisorEvent, EmisorSubsMap>}
    */
@@ -329,4 +329,8 @@ export class EmisorCore {
       ...this.#afterEmitHook.getAllHooks(this.#hookApi)
     ].forEach((hook) => hook($event, payload));
   }
+}
+
+export {
+  EmisorCore
 }

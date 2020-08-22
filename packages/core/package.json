@@ -3,13 +3,11 @@
   "version": "1.0.0-alpha.2",
   "description": "Advanced event emitter core",
   "main": "dist/index.js",
-  "exports": {
-    "import": "./src/index.js",
-    "require": "./dist/index.js"
-  },
-  "type": "module",
   "readmeFilename": "README.md",
   "license": "Apache License v2.0",
+  "engines" : { 
+    "node" : ">11" 
+  },
   "author": {
     "name": "Victor Perez",
     "email": "vpjs@victor-perez.nl",

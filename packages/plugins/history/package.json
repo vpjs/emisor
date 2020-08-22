@@ -1,6 +1,6 @@
 {
   "name": "@emisor/plugin-history",
-  "version": "1.0.1-alpha.3",
+  "version": "1.0.0-alpha.0",
   "description": "History Plugin for Emisor",
   "main": "dist/index.js",
   "module": "src/index.js",
@@ -31,11 +31,10 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@emisor/core": "1.0.1-alpha.3"
+    "@emisor/core": "~1.0.0-alpha.0"
   },
   "devDependencies": {
-    "@emisor/plugin-count": "1.0.1-alpha.3",
+    "@emisor/plugin-count": "~1.0.0-alpha.0",
     "rollup": "^2.23.0"
-  },
-  "gitHead": "3bd7613477288e3a112ade74cb94af13c40f6ffc"
+  }
 }

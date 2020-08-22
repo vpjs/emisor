@@ -97,7 +97,11 @@ module.exports =  {
   // preset: undefined,
 
   // Run tests from one or more projects
-  // projects: undefined,
+  // projects: [
+  //   'packages/emisor',
+  //   'packages/core',
+  //   'packages/plugins/*'
+  // ],
 
   // Use this configuration option to add custom reporters to Jest
   // reporters: undefined,

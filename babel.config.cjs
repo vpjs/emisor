@@ -14,6 +14,24 @@ module.exports = {
     '@babel/plugin-proposal-class-properties'
   ],
   'env': {
+    'test-build': {
+      'plugins': [      
+        ['module-resolver', {
+          'root': ['.'],
+          'alias': {
+            'test-helpers': ([, path]) => `${__dirname}/helpers${path}`
+          }
+        }]
+                 
+      ],
+      'presets': [
+        ['@babel/preset-env', {
+          'targets': {
+            'node': 'current'
+          }
+        }]
+      ]
+    },
     'test': {
       'plugins': [
                 

@@ -23,6 +23,7 @@
     "eslint": "^7.6.0",
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-jest": "^23.20.0",
+    "git-cz": "^4.7.0",
     "jest": "^26.2.2",
     "jest-extended": "^0.11.5",
     "lerna": "^3.22.1",
@@ -35,9 +36,11 @@
     "packages/plugins/*"
   ],
   "scripts": {
-    "test": "jest",
-    "test:mutation": "stryker run",
-    "build": "lerna run build"
+    "test": "BABEL_ENV=test jest",
+    "test:build": "BABEL_ENV=test-build jest",
+    "test:mutation": "BABEL_ENV=test stryker run",
+    "build": "lerna run build",
+    "cz": "git-cz"
   },
   "resolutions": {
     "dot-prop": "^5.1.1"

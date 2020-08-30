@@ -1,8 +1,11 @@
 import { EmisorPlugin, helpers } from '@emisor/core';
-const REPLAY_TAG = Symbol();
 
 export const MODE_DEFAULT_ALLOW = Symbol('MODE_DEFAULT_ALLOW');
 export const MODE_DEFAULT_DENY = Symbol('MODE_DEFAULT_DENY');
+
+/**
+ * @typedef {import('@emisor/core/src').EmisorPluginHook} EmisorPluginHook
+ */
 
 /**
  * 
@@ -42,11 +45,14 @@ export class EmisorPluginHistory extends EmisorPlugin {
   }
 
   /**
-  * @param {import('@emisor/core').EmisorPluginHook} hook 
+  * @param {EmisorPluginHook} hook
   */
-  install (hook) {
-    hook.afterOn.key(this.#key, (...args) => this.#afterOn(...args));
-    hook.beforeEmit.all((...args) => this.#beforeEmit(...args));
+  install ({afterOn, onEmit, eventStr}) {
+    afterOn.key(this.#key, (...args) => this.#afterOn(...args));
+    onEmit.all((...args) => this.#onEmit(...args));
+    eventStr.prefix('>', () => ({
+      [this.#key]: true
+    }));
   }
 
   /**
@@ -57,11 +63,11 @@ export class EmisorPluginHistory extends EmisorPlugin {
   #afterOn ({event: {event, handler}, options}, Emisor) {
     let replay =  (history = []) => {
       let maxLength = options === true ? this.#maxLength : options;
-      history.slice(-maxLength).reverse().forEach(({payload, event}) => Emisor.rawEmit(event, payload, handler, REPLAY_TAG))
-    }
+      history.slice(-maxLength).reverse().forEach(({payload, event}) => Emisor.rawEmit(event, payload, handler));
+    };
     //when event is a Symbol
     if (helpers.isSymbol(event) || !(event).includes('*')) {
-      return replay(this.#history.get(event));
+      replay(this.#history.get(event));
     }
   }
   
@@ -79,12 +85,7 @@ export class EmisorPluginHistory extends EmisorPlugin {
    * @param {import('@emisor/core').EmisorHookMeta} meta
    * @param {import('@emisor/core').EmisorHookAPI} Emisor 
    */
-  #beforeEmit ({event:$event, payload}, Emisor) {
-    let {event, time, tag} = $event;
-    if (tag === REPLAY_TAG) {
-      delete $event.tag;
-      return;
-    }
+  #onEmit ({event:{event}, payload}, Emisor) {
     if (!this.#isAllowed(Emisor.parseEvent(event))) {
       return;
     }
@@ -94,7 +95,6 @@ export class EmisorPluginHistory extends EmisorPlugin {
     }
     history.push({
       payload,
-      time,
       event
     });
     this.#history.set(event, history);

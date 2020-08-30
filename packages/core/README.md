@@ -85,3 +85,13 @@ Emit a event
 | - | - | - |
 | event | `string|Symbol` |
 | payload | `any` | 
+
+
+## Plugins
+
+
+### hooks
+
+#### emit
+
+``

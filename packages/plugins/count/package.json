@@ -28,7 +28,9 @@
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {
-    "rollup": "^2.23.0"
+    "jest-leak-detector": "^26.4.2",
+    "rollup": "^2.23.0",
+    "weak-napi": "^2.0.2"
   },
   "dependencies": {
     "@emisor/core": "1.0.0-alpha.4"

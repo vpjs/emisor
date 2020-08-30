@@ -5,7 +5,7 @@ module.exports = {
     'es6': true
   },
   'root': true,
-  'parser': 'babel-eslint',
+  'parser': '@babel/eslint-parser',
   'parserOptions': {
     'babelOptions': {
       'rootMode': 'upward'
@@ -18,7 +18,15 @@ module.exports = {
   'rules': {
     'indent': [
       'error',
-      2
+      2,
+      { 
+        'MemberExpression': 0,
+        'VariableDeclarator': {
+          'var': 2,
+          'let': 2,
+          'const': 3
+        }
+      }
     ],
     'linebreak-style': [
       'error',

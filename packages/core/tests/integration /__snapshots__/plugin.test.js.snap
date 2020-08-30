@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Plugin hook interface plugin install hook signature 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "afterOff": Object {
+          "all": [Function],
+          "key": [Function],
+        },
+        "afterOn": Object {
+          "all": [Function],
+          "key": [Function],
+        },
+        "afterPublish": Object {
+          "all": [Function],
+          "key": [Function],
+        },
+        "beforeOff": Object {
+          "all": [Function],
+          "key": [Function],
+        },
+        "beforeOn": Object {
+          "all": [Function],
+          "key": [Function],
+        },
+        "beforePublish": Object {
+          "all": [Function],
+          "key": [Function],
+        },
+        "eventStr": Object {
+          "postfix": [Function],
+          "prefix": [Function],
+        },
+        "onEmit": Object {
+          "all": [Function],
+        },
+      },
+      Object {
+        "emit": [Function],
+        "off": [Function],
+        "on": [Function],
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;

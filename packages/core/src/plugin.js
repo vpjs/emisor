@@ -1,16 +1,20 @@
 /**
  * @typedef {import('./hook').EmisorHook} EmisorHook
+ * @typedef {import('./hook').EmisorHookAll} EmisorHookAll
  * @typedef {import('./hook').EmisorHookEventStr} EmisorHookEventStr
  */
+
+import { EmisorPluginError } from './errors';
 
 /**
  * @typedef {object} EmisorPluginHook 
  * @prop {EmisorHook["pluginApi"]} beforeOn
  * @prop {EmisorHook["pluginApi"]} afterOn
- * @prop {EmisorHook["pluginApi"]} beforeEmit
- * @prop {EmisorHook["pluginApi"]} afterEmit
+ * @prop {EmisorHook["pluginApi"]} beforePublish
+ * @prop {EmisorHook["pluginApi"]} afterPublish
  * @prop {EmisorHook["pluginApi"]} beforeOff
  * @prop {EmisorHook["pluginApi"]} afterOff
+ * @prop {EmisorHookAll["pluginApi"]} onEmit
  * @prop {EmisorHookEventStr["pluginApi"]} eventStr
  */
 
@@ -19,21 +23,50 @@
  * @prop {(EmisorPluginHook)=>void} install - install plugin
  */
 
-/**
- * Error object
- */
-export class EmisorPluginError extends Error {}
-
-export class EmisorPluginTypeError extends EmisorPluginError {
-  constructor(param, expect, given) {
-    super(`${param} has to be a ${expect}, ${typeof given} given`);
-  }
-}
+const OVERWRITE_PAYLOAD_KEY = Symbol();
+const OVERWRITE_HANDLER_KEY = Symbol();
+const BREAK_KEY = Symbol();
+const KILL_KEY = Symbol();
 
 /**
  * @implements {IEmisorPlugin}
  */
 export class EmisorPlugin {
+
+  /**
+    * Result key that should contain the new payload
+    * Can only be used by `beforePublish`and `onEmit`hooks,
+    * and `afterPublish` but will only affect payload for other hooks
+    * @example (payload, $event) => ({[EmisorPlugin.OVERWRITE_PAYLOAD_KEY]: 'new payload'})
+    */
+  static get OVERWRITE_PAYLOAD_KEY () {
+    return OVERWRITE_PAYLOAD_KEY;
+  }
+
+  /**
+   * Result key that should contain the new event handler
+   * Can only be used by `beforeOn`
+   * @example (payload, $event) => ({[EmisorPlugin.OVERWRITE_HANDLER_KEY]: () => {}})
+   */
+  static get OVERWRITE_HANDLER_KEY () {
+    return OVERWRITE_HANDLER_KEY;
+  }
+
+  /**
+   * This will break execution of all other hooks
+   */
+  static get BREAK_KEY () {
+    return BREAK_KEY;
+  }
+
+  /**
+   * This will break execution of all other hooks and stop further execution emit
+   */
+  static get KILL_KEY () {
+    return KILL_KEY;
+  }
+
+
   install () {
     throw new EmisorPluginError('Plugin is missing a install method');
   }

@@ -1,3 +1,4 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+
 exports[`EmisorPlugin plugin should have method install 1`] = `"Plugin is missing a install method"`;

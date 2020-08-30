@@ -1,4 +1,4 @@
 {
     "git.ignoreLimitWarning": true,
-    "javascript.implicitProjectConfig.checkJs": true
+    "javascript.implicitProjectConfig.checkJs": false
 }

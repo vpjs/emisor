@@ -28,7 +28,9 @@ export class EmisorPluginCount extends EmisorPlugin {
   install(hook) {
     hook.eventStr.postfix(POSTFIX_ON_KEY, ($event) =>  {
       let {count} = POSTFIX_ON_KEY.exec($event).groups;
-      return {count};
+      return {
+        [this.#key]: count
+      };
     });
     hook.beforeOn.key(
       this.#key,
@@ -48,7 +50,7 @@ export class EmisorPluginCount extends EmisorPlugin {
         /**
          * @type {import('@emisor/core').EmisorEventHandler}
          */
-        handler: (data, $event) => {
+        [EmisorPlugin.OVERWRITE_HANDLER_KEY]: (data, $event) => {
           if (count === 1) {
             Emisor.off($event.event, $event.handler);
           }
@@ -57,7 +59,7 @@ export class EmisorPluginCount extends EmisorPlugin {
             count--;
           }
         }
-      }
+      };
     }
   }
 }

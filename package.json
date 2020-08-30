@@ -3,6 +3,8 @@
   "private": true,
   "devDependencies": {
     "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.4",
+    "@babel/eslint-parser": "^7.11.4",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-proposal-private-methods": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.11.0",
@@ -15,12 +17,11 @@
     "@stryker-mutator/jest-runner": "3.3.1",
     "acorn-private-class-elements": "^0.2.6",
     "acorn-private-methods": "^0.3.2",
-    "babel-eslint": "^10.1.0",
     "babel-jest": "26.3.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "core-js": "3",
     "deepmerge": "^4.2.2",
-    "eslint": "^7.6.0",
+    "eslint": "^7.7.0",
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-jest": "^23.20.0",
     "git-cz": "^4.7.0",
@@ -45,7 +46,7 @@
   "resolutions": {
     "dot-prop": "^5.1.1"
   },
-  "engines" : { 
-    "node" : ">11" 
+  "engines": {
+    "node": ">11"
   }
 }

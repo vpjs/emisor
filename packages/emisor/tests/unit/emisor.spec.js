@@ -6,7 +6,7 @@ describe('Emisor', () => {
  
   test('Emisor.once', async () => {
     let handler = jest.fn(),
-      event = Symbol();
+        event = Symbol();
     Emitter.once(event, handler);
     Emitter.emit(event);
     Emitter.emit(event);
@@ -16,7 +16,7 @@ describe('Emisor', () => {
 
   test('Emisor.many', async () => {
     let handler = jest.fn(),
-      event = Symbol();
+        event = Symbol();
     Emitter.many(event, 2, handler);
     Emitter.emit(event);
     Emitter.emit(event);
@@ -27,7 +27,7 @@ describe('Emisor', () => {
 
   test('Emisor.history', async () => {
     let handler = jest.fn(),
-      event = Symbol();
+        event = Symbol();
     Emitter.emit(event, 'test1');
     Emitter.history(event, handler);
     await delay();
@@ -36,12 +36,12 @@ describe('Emisor', () => {
 
   test('Emisor.historyOnce', async () => {
     let handler = jest.fn(),
-      event = Symbol();
-    Emitter.emit(event, 'test1');
+        event = Symbol();
+    Emitter.emit(event, 'test2');
     Emitter.historyOnce(event, handler);
-    Emitter.emit(event, 'test1');
+    Emitter.emit(event, 'test2');
     await delay();
     expect(handler).toBeCalledTimes(1);
-    expect(handler).toHaveBeenNthCalledWith(1, 'test1', expect.any(Object));
+    expect(handler).toHaveBeenNthCalledWith(1, 'test2', expect.any(Object));
   });
 });

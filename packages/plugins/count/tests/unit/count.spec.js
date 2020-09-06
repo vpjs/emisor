@@ -19,10 +19,10 @@ describe.each([
     let handler = jest.fn(),
         event = Symbol();
     Emitter.on(event, handler, {[key]: times})
-      .emit(event)
-      .emit(event)
-      .emit(event)
-      .emit(event);
+    .emit(event)
+    .emit(event)
+    .emit(event)
+    .emit(event);
     await delay();
     expect(handler).toBeCalledTimes(times);
   });
@@ -37,12 +37,31 @@ describe('EmisorPluginCount using postfix key', () => {
   test('of subscriber is only called 2', async () => {
     let handler = jest.fn();
     Emitter.on('test?#2', handler)
-      .emit('test')
-      .emit('test')
-      .emit('test')
-      .emit('test');
+    .emit('test')
+    .emit('test')
+    .emit('test')
+    .emit('test');
     await delay();
     expect(handler).toBeCalledTimes(2);
+  });
+  
+});
+
+describe('EmisorPluginCount invalid value', () => {
+  let Emitter = new EmisorCore({
+    plugins: [
+      new EmisorPluginCount()
+    ]
+  });
+  test('of subscriber is only called 2', async () => {
+    let handler = jest.fn();
+    Emitter.on('test', handler, {count: '1'})
+    .emit('test')
+    .emit('test')
+    .emit('test')
+    .emit('test');
+    await delay();
+    expect(handler).toBeCalledTimes(4);
   });
   
 });
@@ -59,9 +78,9 @@ describe('Check for leaks', () => {
         detector = new LeakDetector(reference);
 
     Emitter.on('test?#1', reference)
-      .emit('test')
-      .emit('test')
-      .off('test');
+    .emit('test')
+    .emit('test')
+    .off('test');
 
     await delay();
     reference = null;

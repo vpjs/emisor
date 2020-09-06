@@ -12,13 +12,14 @@ describe ('EmisorCore signature', () => {
     expect(new EmisorCore()).toEqual(EmisorCoreSignature); 
   });
 
-  test('EmisorCore signature when changing', () => {
+  test('EmisorCore signature when chaining', () => {
     let Emitter = new EmisorCore();
     expect(Emitter.on('test', () => {})).toEqual(EmisorCoreSignature);
     expect(Emitter.off()).toEqual(EmisorCoreSignature);
     expect(Emitter.off(Symbol('non existing event'))).toEqual(EmisorCoreSignature);
     expect(Emitter.emit('test')).toEqual(EmisorCoreSignature);
     expect(Emitter.emit(Symbol())).toEqual(EmisorCoreSignature);
+    expect(Emitter.emit(1)).toEqual(EmisorCoreSignature);
   });
 });
 
@@ -77,6 +78,7 @@ describe.each([
     expect(sub).toBeCalledWith(data, {
       event,
       handler: sub,
+      tags: [],
       id: expect.stringMatching(/\d+/),
       time: expect.any(Number)
     });
@@ -97,6 +99,38 @@ describe.each([
 
     expect(sub).toBeCalledTimes(1);
   });
+});
+
+describe('EmisorCore.emit', ()  => {
+  let Emitter = new EmisorCore();
+  test('tags', async () => {
+    let sub = jest.fn(),
+        symbol = Symbol();
+  
+    Emitter.on('test', sub);
+    Emitter.emit('test', 1, [symbol]);
+
+    await delay();
+
+    expect(sub).toBeCalledWith(1, expect.objectContaining({
+      tags: [symbol]
+    }));
+  });
+
+  test('of tags still are a array when there is no array given', async () => {
+    let sub = jest.fn(),
+        symbol = Symbol();
+
+    Emitter.on('test', sub);
+    Emitter.emit('test', 1, symbol);
+
+    await delay();
+
+    expect(sub).toBeCalledWith(1, expect.objectContaining({
+      tags: [symbol]
+    }));
+  });
+
 });
 
 describe('EmisorCore.off', ()  => {

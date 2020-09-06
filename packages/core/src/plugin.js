@@ -27,7 +27,8 @@ const OVERWRITE_PAYLOAD_KEY = Symbol();
 const OVERWRITE_HANDLER_KEY = Symbol();
 const BREAK_KEY = Symbol();
 const KILL_KEY = Symbol();
-
+const REMOVE_TAG = Symbol();
+const ADD_TAG = Symbol();
 /**
  * @implements {IEmisorPlugin}
  */
@@ -66,6 +67,13 @@ export class EmisorPlugin {
     return KILL_KEY;
   }
 
+  static get REMOVE_TAG () {
+    return REMOVE_TAG;
+  }
+
+  static get ADD_TAG () {
+    return ADD_TAG;
+  }
 
   install () {
     throw new EmisorPluginError('Plugin is missing a install method');

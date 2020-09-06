@@ -4,10 +4,10 @@ import {delay} from 'test-helpers/test';
 import LeakDetector from 'jest-leak-detector';
 
 describe.each([
-  true,
-  1,
-  3
-])('EmisorPluginHistory default options', (history) => {
+  [true, 'test'],
+  [1, Symbol()],
+  [3, 1]
+])('EmisorPluginHistory default options', (history, event) => {
   let Emitter = new EmisorCore({
     plugins: [
       new EmisorPluginHistory()
@@ -16,8 +16,7 @@ describe.each([
   test(`history ${history}`, async () => {
     
     let handler = jest.fn(),
-        notCalled = jest.fn(),
-        event = Symbol();
+        notCalled = jest.fn();
     Emitter.emit(event, 'test');
     await delay(); //fake time between emit and on
     Emitter.on(event, notCalled);
@@ -30,7 +29,8 @@ describe.each([
       event,
       handler,
       id: expect.any(String),
-      time: expect.any(Number)
+      time: expect.any(Number),
+      tags: []
     });
   });
 });
@@ -76,15 +76,18 @@ describe.each([
 let event_allowed = Symbol('allowed'),
     event_denied = Symbol('denied');
 describe.each([
-  [MODE_DEFAULT_DENY, [event_allowed], event_allowed, true],
-  [MODE_DEFAULT_DENY, ['test'], 'test', true],
-  [MODE_DEFAULT_DENY, ['test.*'], 'test', true],
-  [MODE_DEFAULT_DENY, ['test.*'], 'test.test1.test2', true],
-  [MODE_DEFAULT_ALLOW, [event_denied], event_denied, false],
-  [MODE_DEFAULT_ALLOW, ['test'], 'test', false],
-  [MODE_DEFAULT_ALLOW, ['test.*'], 'test', false],
-  [MODE_DEFAULT_ALLOW, ['test.*'], 'test.test1.test2', false]
-])('EmisorPluginHistory mode', (mode, optionEvents, event, shouldBeCalled) => {
+  [MODE_DEFAULT_DENY, [event_allowed], event_allowed, true, false],
+  [MODE_DEFAULT_DENY, ['test'], 'test', true, false],
+  [MODE_DEFAULT_DENY, ['test.*'], 'test', true, false],
+  [MODE_DEFAULT_DENY, ['test.*'], 'test.test1.test2', true, false],
+  [MODE_DEFAULT_DENY, [], 'test.test1.test2',false, false],
+  [MODE_DEFAULT_ALLOW, [event_denied], event_denied, false, true],
+  [MODE_DEFAULT_ALLOW, ['test'], 'test', false, true],
+  [MODE_DEFAULT_ALLOW, ['test.*'], 'test', false, true],
+  [MODE_DEFAULT_ALLOW, ['test.*'], 'test.test1.test2', false, true],
+  [MODE_DEFAULT_ALLOW, [], 'test.test1.test2', true, true],
+  [Symbol('invalid'), [], 'test.test1.test2', false, false]
+])('EmisorPluginHistory mode', (mode, optionEvents, event, handler1Called, handler2Called) => {
   let Emitter = new EmisorCore({
     plugins: [
       new EmisorPluginHistory({
@@ -105,12 +108,16 @@ describe.each([
     Emitter.on(event2, handler2, {history: true});
     await delay();
 
-    if (shouldBeCalled) {
+    if (handler1Called) {
       expect(handler).toBeCalled();
-      expect(handler2).not.toBeCalled();
     } else {
       expect(handler).not.toBeCalled();
+    }
+
+    if (handler2Called) {
       expect(handler2).toBeCalled();
+    } else {
+      expect(handler2).not.toBeCalled();
     }
   });
 });
@@ -133,10 +140,28 @@ describe('EmisorPluginHistory using prefix key', () => {
       event: 'test',
       handler,
       id: expect.any(String),
-      time: expect.any(Number)
+      time: expect.any(Number),
+      tags: []
     });
   });
-  
+});
+
+describe('EmisorPluginHistory unsupported', () => {
+  let Emitter = new EmisorCore({
+    plugins: [
+      new EmisorPluginHistory()
+    ]
+  });
+  test('unsupported wildcard event', async () => {
+    let handler = jest.fn();
+
+    Emitter.emit('test', 'history');
+    await delay(); //fake time between emit and on
+
+    Emitter.on('>test.*', handler);
+    await delay();
+    expect(handler).not.toBeCalled();
+  });
 });
 
 describe('Check for leaks', () => {
@@ -151,10 +176,10 @@ describe('Check for leaks', () => {
 
     Emitter.emit('test');
     await delay(); //fake time between emit and on
-    Emitter.on('test', reference, {history: true})
-      .off('test');
+    Emitter.on('test', reference, {history: true});
 
     await delay();
+    Emitter.off();
     reference = null;
 
     expect(await detector.isLeaking()).toBe(false);
@@ -176,8 +201,7 @@ describe('Check for leaks', () => {
     await delay(); //fake time between emit and on
     
     Emitter
-      .on('test', handler, {history: true})
-      .off('test');
+    .on('test', handler, {history: true});
     
     Emitter.emit('test', null); //overwrite
     await delay();

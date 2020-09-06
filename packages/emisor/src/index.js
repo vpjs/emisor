@@ -18,14 +18,27 @@ export class Emisor extends EmisorCore {
    * @param {import('@emisor/core').EmisorOptions} options
    * @param {object} [pluginConfig]
    */
-  constructor ({plugins = [], ...options} = {}, {history = {}, count = {}} = {}) {
+  constructor ({
+    plugins = [], 
+    ...options
+  } = {}, {
+    history = {}, 
+    count = {}
+  } = {}) {
     super({
       plugins: [
         new EmisorPluginCount(count),
         new EmisorPluginHistory(history),
         ...plugins
       ],
-      ...options
+      ...options,
+      chain: [
+        ...(options?.addToChain || []),
+        'once',
+        'many',
+        'history',
+        'historyOnce'
+      ],
     });
     this.#historyKey = history.key || 'history';
     this.#countKey = count.key || 'count';
@@ -69,16 +82,11 @@ export class Emisor extends EmisorCore {
 
   /**
    * @param {EmisorEvent} event
-   * @param {number|boolean|EmisorEventHandler} length
    * @param {EmisorEventHandler} handler
    */
-  historyOnce (event, length, handler) {
-    if (typeof length === 'function') {
-      handler = length;
-      length = true;
-    }
+  historyOnce (event, handler) {
     return this.on(event, handler, {
-      [this.#historyKey]: length,
+      [this.#historyKey]: true ,
       [this.#countKey]: 1
     });
   }

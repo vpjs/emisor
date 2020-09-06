@@ -1,5 +1,5 @@
 import { EmisorError, EmisorTypeError } from './errors';
-import { isString, isSymbol, isFunction } from './helpers';
+import { isString } from './helpers';
 import { EmisorHook, EmisorHookAll, EmisorHookEventStr } from './hook';
 import { EmisorPlugin } from './plugin';
 export * as helpers from './helpers';
@@ -19,6 +19,7 @@ export * as helpers from './helpers';
  * @prop {string} [nsSeparator='.'] namespace separator options
  * @prop {string} [postfixSeparator=':'] postfix separator
  * @prop {IEmisorPlugin[]} [plugins] plugins
+ * @prop {string[]} [chain] add methods to the chain api 
  */
  
 /**
@@ -60,7 +61,6 @@ export * as helpers from './helpers';
   * @prop {EmisorCore["on"]} on
   * @prop {EmisorCore["emit"]} emit
   * @prop {EmisorCore["off"]} off
-  * @prop {Function} rawEmit
   * @prop {Function} parseEvent
   */
 
@@ -121,8 +121,14 @@ export default class EmisorCore {
    */
   #afterOffHook = new EmisorHook()
 
+  /**
+   * Hook that enables event string parsing
+   */
   #eventStrHook = new EmisorHookEventStr()
 
+  #subscriberFilterHook = new EmisorHookAll()
+
+  #chainMethods = ['on', 'emit', 'off'];
   /**
    * @type {EmisorHookAPI}
    */
@@ -131,7 +137,6 @@ export default class EmisorCore {
       on: (...args) => this.on(...args),
       emit: (...args) => this.emit(...args),
       off: (...args) => this.off(...args),
-      rawEmit: (...args) => this.#rawEmit(...args),
       parseEvent: (event) => this.#parseEvent(event)
     };
   }
@@ -143,7 +148,8 @@ export default class EmisorCore {
   constructor ({
     nsSeparator = DEFAULT_NS_SEPARATOR,
     postfixSeparator = DEFAULT_POSTFIX_SEPARATOR,
-    plugins = []
+    plugins = [],
+    chain = [],
   } = {}) {
     [
       ['nsSeparator', nsSeparator],
@@ -162,6 +168,10 @@ export default class EmisorCore {
     if (postfixSeparator === nsSeparator) {
       throw new EmisorError('nsSeparator and postfixSeparator can not be the same');
     }
+    this.#chainMethods = [
+      ...chain,
+      ...this.#chainMethods
+    ],
     this.#nsSeparator = nsSeparator;
     this.#eventStrHook.postfixSeparator = postfixSeparator;
     this.#eventStrHook.postfixDivider = DEFAULT_POSTFIX_DIVIDER;
@@ -175,6 +185,7 @@ export default class EmisorCore {
         beforeOff: this.#beforeOffHook.pluginApi,
         afterOff: this.#afterOffHook.pluginApi,
         onEmit: this.#onEmitHook.pluginApi,
+        subscriberFilter: this.#subscriberFilterHook.pluginApi,
         eventStr: this.#eventStrHook.pluginApi
       }, this.#chain());
     });
@@ -188,8 +199,6 @@ export default class EmisorCore {
    * @returns {EmisorChainingAPI};
    */
   on (event, handler, options = {}) {
-      
-
     if(isString(event)) {
       let result = this.#eventStrHook.parseStr(event);
       event = result.event;
@@ -261,49 +270,49 @@ export default class EmisorCore {
   /**
    * 
    * @param {EmisorEvent} event 
-   * @param {*} [payload] 
+   * @param {any} [payload] 
+   * @param {any[]} [tags]
    * @return {EmisorChainingAPI}
    */
-  emit (event, payload) {
+  emit (event, payload, tags = []) {
+    if (!Array.isArray(tags)) {
+      tags = [tags];
+    }
+
     return this.#chain (
-      this.#runOnEmitHook(event, payload)
+      this.#runOnEmitHook(event, payload, tags)
     );
   }
 
-  async #runOnEmitHook (event, payload) {
+  async #runOnEmitHook (event, payload, tags) {
     let {
       $event,
-      $payload
-    } = await this.#runHooks({ event}, payload, this.#onEmitHook.getHooks(this.#hookApi));
+      $payload,
+    } = await this.#runHooks({ event, tags }, payload, this.#onEmitHook.getHooks(this.#hookApi));
     //no event given or hook has killed execution
     if (!$event) {
       return;
     }
-    this.#rawEmit($event.event, $payload);
+    this.#rawEmit($event.event, $payload, $event.tags);
   }
 
   /**
    * 
    * @param {EmisorEvent} event 
    * @param {*} [payload]
-   * @param {EmisorEventHandler|EmisorEventHandler[]} [only]
    * @param {*} [tag]
    */
-  async #rawEmit (event, payload, only, tags) {
-    /** @type {Array<[EmisorEventHandler, EmisorPluginHooksMap]>} */
+  #rawEmit (event, payload, tags) {
+    /** @type {Array<[EmisorEventHandler, Object]>} */
     let subs = [], 
         parsedEvents = this.#parseEvent(event),
         $event = {
           tags,
           event
         };
-    
-    // {generator: filterHooks, updateEvent} = this.#hooksGeneratorInit({}, payload, [
-    //   () => only ? /** @type {EmisorEventHandler[]} **/ (only).includes(handler) : true
-    // ]);
-    //before emit
-    only = /** @type {EmisorEventHandler[]} **/ (isFunction(only) ? [only] : only);
-    parsedEvents.forEach((event) => {
+    //get all subscribers
+    parsedEvents
+    .forEach((event) => {
       if(this.#subs.has(event)) {
         subs = [
           ...subs,
@@ -311,18 +320,22 @@ export default class EmisorCore {
         ];
       }
     });
-    // let handlerIndex = 0
-    // updateEvent({
-    //   ...$event,
-    //   handler: subs[++handlerIndex]
-    // })
-    // for await (let filter of filterHooks) {
-    //   for 
-    // }
 
+    //nothing to do
+    if (!subs.length) {
+      return;
+    }
+    let filterHooks = this.#subscriberFilterHook.getHooks(this.#hookApi);
 
     subs
-    .filter(([handler]) => only ? /** @type {EmisorEventHandler[]} **/ (only).includes(handler) : true)
+    .filter(([handler]) => {
+      for (let hook of filterHooks) {
+        return hook({...$event,
+          handler
+        }, payload);
+      }
+      return true;
+    })
     .forEach(([handler, options]) => this.#publish({
       event: {
         ...$event,
@@ -330,6 +343,7 @@ export default class EmisorCore {
         time: Date.now(),
         id: `${DEFAULT_ID_COUNTER++}`
       },
+      handler,
       payload,
       options
     }));
@@ -338,13 +352,12 @@ export default class EmisorCore {
   /**
    * @param {{event: EmisorEvent, handler: EmisorEventHandler, payload: any, tag: any, options: any}} publishObj
    */
-  async #publish ({event, payload, options}) {
+  async #publish ({event, payload, options, handler}) {
     //before emit hooks
     let {
-          $event, 
-          $payload
-        } = await this.#runHooks(event, payload, this.#beforePublishHook.getHooks(options, this.#hookApi)),
-        { handler } = $event;
+      $event, 
+      $payload
+    } = await this.#runHooks(event, payload, this.#beforePublishHook.getHooks(options, this.#hookApi));
 
     //no event given or hook has killed execution
     if (!$event) {
@@ -372,6 +385,16 @@ export default class EmisorCore {
       if (result?.[EmisorPlugin.OVERWRITE_PAYLOAD_KEY]) {
         $payload = result[EmisorPlugin.OVERWRITE_PAYLOAD_KEY];
       }
+      //remove tag
+      if (result?.[EmisorPlugin.REMOVE_TAG]) {
+        $event.tags = $event.tags
+        .filter((t) => t !== result[EmisorPlugin.REMOVE_TAG]);
+      }
+      //add tag
+      if (result?.[EmisorPlugin.ADD_TAG]) {
+        $event.tags.push(result[EmisorPlugin.ADD_TAG]);
+      }
+      //kill
       if (result?.[EmisorPlugin.KILL_KEY]) {
         return {};
       }
@@ -389,7 +412,7 @@ export default class EmisorCore {
    * @returns {EmisorChainingAPI}
    */
   #chain (promise) {
-    let methods = ['on', 'emit', 'off'],
+    let methods = this.#chainMethods,
         wrappers ;
     if (!promise) {
       wrappers = methods.map((key) => [
@@ -413,23 +436,22 @@ export default class EmisorCore {
    * @returns {EmisorEvent[]} 
    */
   #parseEvent (event) {
-    if (isSymbol(event)) {
+    if (!isString(event)) {
       return [event, '*'];
-    } else if (isString(event)) { 
-      let ns = /** @type {string} **/ (event).split(this.#nsSeparator);
-      return [
-        event,
-        `${event}${this.#nsSeparator}${DEFAULT_WILDCARD}`,
-        ...ns.map((_, i, arr) => {
-          let x = [...arr];
-          x[i] = DEFAULT_WILDCARD;
-          return [
-            x.join(this.#nsSeparator),
-            [...arr.slice(0,i), DEFAULT_WILDCARD].join(this.#nsSeparator)
-          ];
-        }).flat()
-      ].filter((v, i, a) => a.indexOf(v) === i);
     }
+    let ns = `${event}`.split(this.#nsSeparator);
+    return [
+      event,
+      `${event}${this.#nsSeparator}${DEFAULT_WILDCARD}`,
+      ...ns.map((_, i, arr) => {
+        let x = [...arr];
+        x[i] = DEFAULT_WILDCARD;
+        return [
+          x.join(this.#nsSeparator),
+          [...arr.slice(0,i), DEFAULT_WILDCARD].join(this.#nsSeparator)
+        ];
+      }).flat()
+    ].filter((v, i, a) => a.indexOf(v) === i);
   }
 
 }

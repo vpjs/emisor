@@ -36,6 +36,9 @@ exports[`Plugin hook interface plugin install hook signature 1`] = `
         "onEmit": Object {
           "all": [Function],
         },
+        "subscriberFilter": Object {
+          "all": [Function],
+        },
       },
       Object {
         "emit": [Function],

@@ -186,20 +186,30 @@ export class EmisorHookEventStr {
    * @param {string} s
    */
   set postfixSeparator(s) {
-    if (isString(s) && s.length === 1) {
-      this.#postfixSeparator = s;
-      this.#updateAllowedPrefixRegex();
+    if (!isString(s)) {
+      throw new EmisorPluginTypeError('postfixSeparator', 'string', s);
     }
+    if(s.length !== 1) {
+      throw new EmisorPluginError('postfixSeparator can not be longer then 1');
+    }
+    
+    this.#postfixSeparator = s;
+    this.#updateAllowedPrefixRegex();
+    
   }
 
   /**
    * @param {string} s
    */
   set postfixDivider(s) {
-    if (isString(s) && s.length === 1) {
-      this.#postfixDivider = s;
-      this.#updateAllowedPrefixRegex();
+    if (!isString(s)) {
+      throw new EmisorPluginTypeError('postfixDivider', 'string', s);
     }
+    if(s.length !== 1) {
+      throw new EmisorPluginError('postfixDivider can not be longer then 1');
+    }
+    this.#postfixDivider = s;
+    this.#updateAllowedPrefixRegex();
   }
 
   get pluginApi () {

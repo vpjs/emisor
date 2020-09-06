@@ -1,4 +1,5 @@
 import { EmisorHookAll, EmisorHook, EmisorHookEventStr  } from '../../src/hook';
+import { EmisorPluginTypeError, EmisorPluginError } from '../../src/errors';
 
 describe ('EmisorHookAll', () => {
   test('plugin interface', () => {
@@ -56,7 +57,6 @@ describe ('EmisorHook', () => {
       key:expect.any(Function)
     });
     expect(hook).toHaveProperty('getHooks', expect.any(Function));
-    expect(hook).toHaveProperty('getHooks', expect.any(Function));
   });
 
   test('EmisorHook pluginApi.key should throw a error when first param is not an string or a Symbol', () => {
@@ -65,7 +65,7 @@ describe ('EmisorHook', () => {
     .forEach((type) => {
       expect(() => {
         hook.pluginApi.key(type, () => {});
-      }).toThrowError(`key has to be a string or Symbol, ${typeof type} given`);
+      }).toThrowWithMessage(EmisorPluginTypeError, `key has to be a string or Symbol, ${typeof type} given`);
     });
   });
 
@@ -75,7 +75,7 @@ describe ('EmisorHook', () => {
     .forEach((type) => {
       expect(() => {
         hook.pluginApi.key('a', type);
-      }).toThrowError(`callback has to be a function, ${typeof type} given`);
+      }).toThrowWithMessage(EmisorPluginTypeError, `callback has to be a function, ${typeof type} given`);
     });
   });
 
@@ -85,7 +85,7 @@ describe ('EmisorHook', () => {
     .forEach((type) => {
       expect(() => {
         hook.pluginApi.all(type);
-      }).toThrowError(`callback has to be a function, ${typeof type} given`);
+      }).toThrowWithMessage(EmisorPluginTypeError, `callback has to be a function, ${typeof type} given`);
     });
   });
 
@@ -167,13 +167,30 @@ describe ('EmisorHookEventStr', () => {
     expect(hook).toHaveProperty('parseStr', expect.any(Function));
   });
 
+  test.each([
+    'postfixSeparator',
+    'postfixDivider'
+  ])('EmisorHookEventStr %s', (setter) => {
+    let hook = new EmisorHookEventStr();
+    [1,null, undefined, {}, () => {}]
+    .forEach((type) => {
+      expect(() => {
+        hook[setter] = type;
+      }).toThrowWithMessage(EmisorPluginTypeError, `${setter} has to be a string, ${typeof type} given`);
+    });
+    expect(() => {
+      hook[setter] = 'text';
+    }).toThrowWithMessage(EmisorPluginError, `${setter} can not be longer then 1`);
+  });
+
+
   test('EmisorHookEventStr pluginApi.postfix should throw a error when first param is not an RegExp', () => {
     let hook = new EmisorHookEventStr();
     ['',1,null, undefined, {}, () => {}]
     .forEach((type) => {
       expect(() => {
         hook.pluginApi.postfix(type, () => {});
-      }).toThrowError(`regex has to be a RegExp, ${typeof type} given`);
+      }).toThrowWithMessage(EmisorPluginTypeError, `regex has to be a RegExp, ${typeof type} given`);
     });
   });
 
@@ -183,7 +200,7 @@ describe ('EmisorHookEventStr', () => {
     .forEach((type) => {
       expect(() => {
         hook.pluginApi.postfix(/a/, type);
-      }).toThrowError(`callback has to be a function, ${typeof type} given`);
+      }).toThrowWithMessage(EmisorPluginTypeError, `callback has to be a function, ${typeof type} given`);
     });
   });
 
@@ -255,7 +272,7 @@ describe ('EmisorHookEventStr', () => {
     .forEach((type) => {
       expect(() => {
         hook.pluginApi.prefix(type, () => {});
-      }).toThrowError(`char has to be a string, ${typeof type} given`);
+      }).toThrowWithMessage(EmisorPluginTypeError, `char has to be a string, ${typeof type} given`);
     });
   });
 
@@ -265,7 +282,7 @@ describe ('EmisorHookEventStr', () => {
     .forEach((char) => {
       expect(() => {
         hook.pluginApi.prefix(char, () => {});
-      }).toThrowError(`char "${char}" is not allowed`);
+      }).toThrowWithMessage(EmisorPluginError, `char "${char}" is not allowed`);
     });
   });
 
@@ -275,7 +292,7 @@ describe ('EmisorHookEventStr', () => {
     .forEach((char) => {
       expect(() => {
         hook.pluginApi.prefix(char, () => {});
-      }).toThrowError('char can not be longer then 1');
+      }).toThrowWithMessage(EmisorPluginError, 'char can not be longer then 1');
     });
   });
 
@@ -285,7 +302,7 @@ describe ('EmisorHookEventStr', () => {
     
     expect(() => {
       hook.pluginApi.prefix('!', () => {});
-    }).toThrowError('There is already a hook registered with "!"');
+    }).toThrowWithMessage(EmisorPluginError, 'There is already a hook registered with "!"');
   });
 
   test('EmisorHookEventStr pluginApi.prefix should throw a error when seconds param is not an function', () => {
@@ -294,7 +311,7 @@ describe ('EmisorHookEventStr', () => {
     .forEach((type) => {
       expect(() => {
         hook.pluginApi.prefix('!', type);
-      }).toThrowError(`callback has to be a function, ${typeof type} given`);
+      }).toThrowWithMessage(EmisorPluginTypeError, `callback has to be a function, ${typeof type} given`);
     });
   });
 
@@ -306,7 +323,7 @@ describe ('EmisorHookEventStr', () => {
     .forEach((char) => {
       expect(() => {
         hook.pluginApi.prefix(char, () => {});
-      }).toThrowError(`char "${char}" is not allowed`);
+      }).toThrowWithMessage(EmisorPluginError, `char "${char}" is not allowed`);
     });
   });
 

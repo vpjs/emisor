@@ -11,7 +11,6 @@
     "@babel/preset-env": "^7.11.0",
     "@rollup/plugin-babel": "^5.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
-    "@stryker-mutator/babel-transpiler": "^3.3.1",
     "@stryker-mutator/core": "3.3.1",
     "@stryker-mutator/javascript-mutator": "^3.3.1",
     "@stryker-mutator/jest-runner": "3.3.1",
@@ -38,6 +37,7 @@
   ],
   "scripts": {
     "test": "BABEL_ENV=test jest",
+    "test:watch": "BABEL_ENV=test jest --watchAll --maxWorkers=100%",
     "test:build": "BABEL_ENV=test-build jest",
     "test:mutation": "BABEL_ENV=test stryker run",
     "build": "lerna run build",

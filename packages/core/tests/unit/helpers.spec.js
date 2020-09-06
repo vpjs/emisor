@@ -11,7 +11,7 @@ let TEST_MAP = {
 };
 
 describe.each([
-  [isSymbol, [Symbol()], 'symbol'],
+  [isSymbol, [Symbol(), Object(Symbol())], 'symbol'],
   [isRegExp, [/test/, new RegExp('test')], 'regexp'],
   [isString, ['', String(), new String()], 'string'],
   [isFunction, [() => {}, function text () {}], 'function']
@@ -24,9 +24,9 @@ describe.each([
 
   test(`${fnc.name} should return false`, () => {
     Object.entries(TEST_MAP)
-      .filter(([key]) => key !== skip)
-      .forEach(([,value]) => {
-        expect(fnc(value)).toEqual(false);
-      });
+    .filter(([key]) => key !== skip)
+    .forEach(([,value]) => {
+      expect(fnc(value)).toEqual(false);
+    });
   });
 });

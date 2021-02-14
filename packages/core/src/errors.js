@@ -1,6 +1,9 @@
 export class EmisorTypeError extends TypeError {
   constructor(param, expect, given) {
-    super(`${param} has to be a ${expect}, ${typeof given} given`);
+    if (!Array.isArray(expect)) {
+      expect = [expect];
+    }
+    super(`${param} has to be a ${expect.join(' or ')}, ${typeof given} given`);
   }
 }
 

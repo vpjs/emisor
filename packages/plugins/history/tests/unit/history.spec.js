@@ -6,7 +6,7 @@ import LeakDetector from 'jest-leak-detector';
 describe.each([
   [true, 'test'],
   [1, Symbol()],
-  [3, 1]
+  [3, '1']
 ])('EmisorPluginHistory default options', (history, event) => {
   let Emitter = new EmisorCore({
     plugins: [
@@ -107,7 +107,7 @@ describe.each([
     Emitter.on(event, handler, {history: true});
     Emitter.on(event2, handler2, {history: true});
     await delay();
-
+    /* eslint-disable jest/no-conditional-expect */
     if (handler1Called) {
       expect(handler).toBeCalled();
     } else {
@@ -119,6 +119,7 @@ describe.each([
     } else {
       expect(handler2).not.toBeCalled();
     }
+    /* eslint-enable jest/no-conditional-expect */
   });
 });
 

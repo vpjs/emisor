@@ -19,7 +19,6 @@ describe ('EmisorCore signature', () => {
     expect(Emitter.off(Symbol('non existing event'))).toEqual(EmisorCoreSignature);
     expect(Emitter.emit('test')).toEqual(EmisorCoreSignature);
     expect(Emitter.emit(Symbol())).toEqual(EmisorCoreSignature);
-    expect(Emitter.emit(1)).toEqual(EmisorCoreSignature);
   });
 });
 
@@ -98,6 +97,38 @@ describe.each([
     await delay();
 
     expect(sub).toBeCalledTimes(1);
+  });
+});
+
+describe('EmisorCore.on', () => {
+  let Emitter = new EmisorCore();
+  test('array', async () => {
+    let sub = jest.fn(),
+        symbol = Symbol(),
+        strEvent = 'test',
+        symEvent = Symbol();
+  
+    Emitter
+    .on([strEvent, symEvent], sub)
+    .emit(strEvent, 1, [symbol])
+    .emit(symEvent, 2, [symbol]);
+
+    await delay();
+
+    expect(sub).toHaveBeenNthCalledWith(1, 1, {
+      event: strEvent,
+      handler: sub,
+      tags: [symbol],
+      id: expect.stringMatching(/\d+/),
+      time: expect.any(Number)
+    });
+    expect(sub).toHaveBeenNthCalledWith(2, 2, {
+      event: symEvent,
+      handler: sub,
+      tags: [symbol],
+      id: expect.stringMatching(/\d+/),
+      time: expect.any(Number)
+    });
   });
 });
 
@@ -336,7 +367,4 @@ describe('different subscriber behavior', () => {
       expect.any(Object)
     );
   });
-
-
-
 });

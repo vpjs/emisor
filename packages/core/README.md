@@ -39,7 +39,7 @@ Emitter.emit('car.right.door.open', true);
 Some plugin support to set options via the postfix of the event `string`, for example the count plugin can be triggered via `this.should.be.called.once:#1`. The default postfix separator is `:`
 
 ### Plugin prefix
-:construction: work in progress
+Some plugin can be triggered via a single prefix chart of the event `stings`, for example the history plugin can be triggered via `>this.is.the.same.as.history.true` 
 
 ## Methods
 
@@ -49,10 +49,17 @@ Subscribe to a event.
 #### params
 | name | type | description |
 | - | - | - |
-| event | `string|Symbol` | event to subscribe to |
+| event | `string\|Symbol\|string[]\|Symbol[]` | event to subscribe to |
 | handler | `function` | event handler |
 | options | `object` | options that wil trigger plugins |
 
+#### example
+```js
+// Subscribe to the foo
+Emitter.on('foo', () => {})
+// Subscribe to both foo and bar with the same handler
+Emitter.on(['foo', 'bar'], () => {})
+```
 
 The handler will receive 2 params the first one the `payload` of the triggered event, second one the `$event` object that will have the following property:
 
@@ -60,9 +67,9 @@ The handler will receive 2 params the first one the `payload` of the triggered e
 | key | type | description |
 | - | - | - |
 | time | `number` | unix timestamp of publish time |
-| event | `string|Symbol` | event that triggered the handler |
+| event | `string\|Symbol` | event that triggered the handler |
 | handler | `function` | the handler it self |
-| tag | `*` | events can have tags, mostly used by plugins |
+| tag | `any[]` | events can have tags, mostly used by plugins |
 
 
 ### `off`
@@ -74,7 +81,7 @@ unsubscribe from a event
 #### params
 | name | type | description |
 | - | - | - |
-| event | `string|Symbol` | unsubscribe to a specific event |
+| event | `string\|Symbol` | unsubscribe to a specific event |
 | handler | `function` | unsubscribe to a specific handler |
 
 ### `emit`
@@ -82,9 +89,10 @@ Emit a event
 
 #### params
 | name | type |
-| - | - | - |
-| event | `string|Symbol` |
+| - | - |
+| event | `string\|Symbol` |
 | payload | `any` | 
+| tags | `any[]\|any` |
 
 
 ## Plugins
@@ -94,4 +102,4 @@ Emit a event
 
 #### emit
 
-``
+

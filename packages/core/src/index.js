@@ -1,5 +1,5 @@
 import { EmisorError, EmisorTypeError } from './errors';
-import { isString } from './helpers';
+import { isString, isSymbol } from './helpers';
 import { EmisorHook, EmisorHookAll, EmisorHookEventStr } from './hook';
 import { EmisorPlugin } from './plugin';
 export * as helpers from './helpers';
@@ -127,6 +127,16 @@ export default class EmisorCore {
   #eventStrHook = new EmisorHookEventStr()
 
   #subscriberFilterHook = new EmisorHookAll()
+  
+  /**
+   * Validate event
+   * @param {EmisorEvent} event 
+   */
+  #validateEvent = (event) => {
+    if (!isString(event) && !isSymbol(event)) {
+      throw new EmisorTypeError('event', ['string', 'symbol'], event);
+    }
+  }
 
   #chainMethods = ['on', 'emit', 'off'];
   /**
@@ -193,12 +203,19 @@ export default class EmisorCore {
 
   /**
    * Subscribe to a event
-   * @param {EmisorEvent} event 
+   * @param {EmisorEvent|EmisorEvent[]} event 
    * @param {EmisorEventHandler} handler 
    * @param {object} [options]
    * @returns {EmisorChainingAPI};
    */
   on (event, handler, options = {}) {
+    if (Array.isArray(event)) {
+      event.forEach((e) => this.on(e, handler, options));
+      return this.#chain();
+    }
+    //validate event
+    this.#validateEvent(event);
+    //string events
     if(isString(event)) {
       let result = this.#eventStrHook.parseStr(event);
       event = result.event;
@@ -253,6 +270,8 @@ export default class EmisorCore {
       this.#subs = new Map();
       return this.#chain();
     }
+    //validate
+    this.#validateEvent(event);
     let handlers = this.#subs.get(event);
     //if a event doesn't have any handlers we can don't unsubscribe anything 
     if(!handlers) {
@@ -268,13 +287,15 @@ export default class EmisorCore {
   }
 
   /**
-   * 
+   * Emit event
    * @param {EmisorEvent} event 
    * @param {any} [payload] 
    * @param {any[]} [tags]
    * @return {EmisorChainingAPI}
    */
   emit (event, payload, tags = []) {
+    //validate
+    this.#validateEvent(event);
     if (!Array.isArray(tags)) {
       tags = [tags];
     }

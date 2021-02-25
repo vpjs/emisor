@@ -1,2 +1,0 @@
-Auth Plugin for Emisor
-=========================

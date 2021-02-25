@@ -1,6 +1,6 @@
 {
   "name": "@emisor/plugin-history",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "History Plugin for Emisor",
   "main": "dist/index.js",
   "readmeFilename": "README.md",
@@ -28,10 +28,10 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@emisor/core": "1.0.0-alpha.5"
+    "@emisor/core": "1.0.0-alpha.6"
   },
   "devDependencies": {
-    "@emisor/plugin-count": "1.0.0-alpha.5",
+    "@emisor/plugin-count": "1.0.0-alpha.6",
     "jest-leak-detector": "^26.4.2",
     "rollup": "^2.23.0",
     "weak-napi": "^2.0.2"

@@ -1,6 +1,6 @@
 {
   "name": "@emisor/core",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "Advanced event emitter core",
   "main": "dist/index.js",
   "readmeFilename": "README.md",

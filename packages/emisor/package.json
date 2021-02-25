@@ -1,6 +1,6 @@
 {
   "name": "emisor",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "Advanced event emitter",
   "main": "dist/index.js",
   "readmeFilename": "README.md",
@@ -31,9 +31,9 @@
     "rollup": "^2.23.0"
   },
   "dependencies": {
-    "@emisor/core": "1.0.0-alpha.4",
-    "@emisor/plugin-count": "1.0.0-alpha.4",
-    "@emisor/plugin-history": "1.0.0-alpha.4"
+    "@emisor/core": "1.0.0-alpha.5",
+    "@emisor/plugin-count": "1.0.0-alpha.5",
+    "@emisor/plugin-history": "1.0.0-alpha.5"
   },
   "gitHead": "7c9b40a85840c1dc47e3aeb9af78e474823982d2"
 }

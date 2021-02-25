@@ -19,6 +19,9 @@
     "url": "git+https://github.com/vpjs/emisor.git",
     "directory": "packages/emisor"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "src"
